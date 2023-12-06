@@ -4,8 +4,8 @@ namespace Day06
 {
 	/*
 	I don't want to have to resort to floats for an integer problem 
-	uint64_t race2(const uint64_t time, const uint64_t distance)
 	Leave this here as a warning to others...
+	uint64_t race2(const uint64_t time, const uint64_t distance)
 	{
 		const double t_d = (double)time;
 		const double d_d = (double)distance;
@@ -30,12 +30,13 @@ namespace Day06
 
 		while (min_hi - min_lo > 1) {
 			const uint64_t cand = (min_hi + min_lo) / 2;
-			if (cand * (time - cand) > distance)
+			if (cand * (time - cand) > distance) {
 				min_hi = cand;
-			else
+			} else {
 				min_lo = cand;
+			}
 		}
-		return half_t + (half_t - min_lo) - min_hi + (time % 2);
+		return time - min_lo - min_hi;
 	}
 
 	int Run(const std::string& filename)
