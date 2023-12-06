@@ -4,8 +4,9 @@ namespace Day05
 {
 
 	typedef std::pair<uint64_t, uint64_t> Range;
-	
-	std::vector<uint64_t> parseSeeds(std::string s) {
+
+	std::vector<uint64_t> parseSeeds(std::string s)
+	{
 		std::vector<uint64_t> ints;
 
 		const auto ss = s.substr(7);
@@ -18,27 +19,9 @@ namespace Day05
 		return ints;
 	}
 
-	std::vector<Range> collapseRanges(std::vector<Range> ranges) {
-		std::vector<Range> new_ranges;
-		std::sort(ranges.begin(), ranges.end(), [](auto &left, auto &right) {
-    	return left.first < right.first;
-		});
-
-		Range r_head = ranges[0];
-		for (size_t i = 1; i < ranges.size(); ++i) {
-			if (ranges[i].first < r_head.first + r_head.second) {
-				r_head.second = r_head.first + r_head.second - ranges[i].first;
-			} else {
-				new_ranges.push_back(r_head);
-				r_head = ranges[i];
-			}
-		}
-		new_ranges.push_back(r_head);
-		return new_ranges;
-	}
-
-	std::vector<Range> parseSeedsToRanges(std::string s) {
-		std::vector<Range> ranges;
+	std::list<Range> parseSeedsToRanges(std::string s)
+	{
+		std::list<Range> ranges;
 
 		const auto ss = s.substr(7);
 		const auto sis = AH::Split(ss, ' ');
@@ -47,7 +30,7 @@ namespace Day05
 			ranges.emplace_back(AH::stoui64(sis[i]), AH::stoui64(sis[i+1]));
 		}
 
-		return collapseRanges(ranges);
+		return ranges;
 	}
 
 	struct mapping
@@ -56,19 +39,19 @@ namespace Day05
 		uint64_t s;
 		uint64_t t;
 
-		mapping(const uint64_t r, const uint64_t s, const uint64_t t) :
-		r(r), s(s), t(t) {}
 		mapping(std::string & s);
 	};
 
-	mapping::mapping(std::string & st) {
+	mapping::mapping(std::string & st)
+	{
 		const auto sis = AH::Split(st, ' ');
 		r = AH::stoui64(sis[0]);
 		s = AH::stoui64(sis[1]);
 		t = AH::stoui64(sis[2]);
 	}
 
-	std::vector<mapping> parseMapping(const std::string s) {
+	std::vector<mapping> parseMapping(const std::string s)
+	{
 		std::vector<mapping> ms;
 		const int hdr = s.find(":");
 		const std::string parsed = s.substr(hdr+1);
@@ -83,7 +66,8 @@ namespace Day05
 		return ms;
 	}
 
-	uint64_t applyMappingsToInt(const uint64_t n, const std::vector<mapping> ms) {
+	uint64_t applyMappingsToInt(const uint64_t n, const std::vector<mapping> ms)
+	{
 		for (auto m :  ms) {
 			if ((n - m.s) < m.t)
 				return m.r + (n - m.s);
@@ -91,44 +75,47 @@ namespace Day05
 		return n;
 	}
 
-	std::vector<Range> applyMappingToRange(const Range r, const mapping m) {
-		std::vector<Range> new_ranges;
-		uint64_t overlap_lo = 0;
-		uint64_t overlap_hi = 0;
-		if ( (r.first > (m.s + m.t)) || (m.s > (r.first + r.second)) ) {
-			std::cout << "No Overlap" << std::endl;
-			new_ranges.push_back(r);
-		} else {
-			overlap_lo = std::max(r.first, m.s);
-			overlap_hi = std::min(r.first + r.second, m.s + m.t);
-			if (overlap_lo != r.first) {
-				new_ranges.emplace_back(r.first, overlap_lo - r.first);
-			}
-			std::cout << "Overlap = " << overlap_lo << "," << overlap_hi << std::endl;
-			std::cout << "m = (" << m.r << "," << m.s << "," << m.t << ")\n";
-			new_ranges.emplace_back(m.r + overlap_lo - m.s, overlap_hi - overlap_lo);
-			if (overlap_hi != r.first + r.second) {
-				new_ranges.emplace_back(overlap_hi, r.first + r.second - overlap_hi);
-			}
-		}
-		return new_ranges;
-	}
-
-	std::vector<Range> applyMappingsToRange(const std::vector<Range> rs,
-		const std::vector<mapping> ms) {
-		std::vector<Range> new_ranges_1 = rs;
-		std::vector<Range> new_ranges_2;
+	void applyMappingToRanges(std::list<Range> & pre, const std::vector<mapping> ms)
+	{
+		std::list<Range> post; // done, we pass these onto the next mapping group
+		std::list<Range> next; // can still be affected by a mapping in this group
 		for (auto m : ms) {
-			for (auto r : new_ranges_1) {
-				auto temp_ranges = applyMappingToRange(r, m);
-				for (auto t : temp_ranges)
-					new_ranges_2.push_back(t);
+			while (pre.size() > 0) {
+				auto r = pre.front();
+				pre.pop_front();
+				// if there is no overlap - this range remains unchanged
+				// so stick it unchanged into next since another interval could affect it
+				if ( (r.first >= (m.s + m.t)) || (m.s >= (r.first + r.second)) ) {
+					next.push_back(r);
+				} else {
+					// the interval of overlap
+					uint64_t overlap_lo = std::max(r.first, m.s);
+					uint64_t overlap_hi = std::min(r.first + r.second, m.s + m.t);
+
+					// there is an untouched interval at the start...
+					if (overlap_lo > r.first) {
+						// ...so stick that on the end of the list to process
+						next.emplace_back(r.first, overlap_lo - r.first);
+					}
+
+					// the region of overlap is reallocated, and not touched again in this group
+					post.emplace_back(m.r + overlap_lo - m.s, overlap_hi - overlap_lo);
+
+					// there is an untouched interval at the end...
+					if (overlap_hi < r.first + r.second) {
+						// ... so stick that on the end of the list to process
+						next.emplace_back(overlap_hi, r.first + r.second - overlap_hi);
+					}
+				}
 			}
-			new_ranges_1 = new_ranges_2;
-			new_ranges_2.clear();
+			// these are the intervals that could still be affected by mappings in this group
+			pre = next;
+			next.clear();
 		}
 
-		return new_ranges_1;
+		pre.insert(pre.end(), post.begin(), post.end());
+
+		return;
 	}
 
 	int Run(const std::string& filename)
@@ -158,26 +145,16 @@ namespace Day05
 		uint64_t part1 = *std::min_element(seed_final.begin(), seed_final.end());
 
 		auto seed_ranges = parseSeedsToRanges(ss[0]);
-		for (auto r : seed_ranges) {
-			std::cout << r.first << "," << r.second << std::endl;
-		}
-		std::cout << std::endl;
 
+		std::list<Range> processed_ranges;
 		for (auto ms : mss) {
-			seed_ranges = applyMappingsToRange(seed_ranges, ms);
+			applyMappingToRanges(seed_ranges, ms);
+		}
+
+		uint64_t part2 = seed_ranges.front().first;
 		for (auto r : seed_ranges) {
-			std::cout << r.first << "," << r.second << std::endl;
+			part2 = std::min(r.first, part2);
 		}
-		std::cout << std::endl;
-		std::cout << std::endl;
-		// break;
-		}
-
-		// for (auto r : seed_ranges) {
-		// 	std::cout << r.first << "," << r.second << std::endl;
-		// }
-
-		uint64_t part2 = 0;
 
 		AH::PrintSoln(5, part1, part2);
 
