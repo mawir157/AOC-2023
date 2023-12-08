@@ -38,17 +38,16 @@ namespace Day08
 	{
 		int i = 0;
 		auto cur = src;
-		bool brk = (cur == tgt);
-		while (!brk) {
+		while (true) {
 			for (auto in : ins) {
 				cur = rs.at(cur)[in];
 				i++;
-				brk = (cur == tgt);
-				if (brk) break;
+				if (cur == tgt) {
+					return i;
+				}
 			}
-			if (brk) break;
 		}
-		return i;
+		return 0;
 	}
 
 	uint64_t runUntilFinalMatch(const std::string src, const char t,
@@ -56,7 +55,7 @@ namespace Day08
 	{
 		auto cur = src;
 		uint64_t i = 0;
-		while (i < 1e6) {
+		while (true) {
 			for (auto in : ins) {
 				cur = rs.at(cur)[in];
 				i++;
@@ -86,7 +85,7 @@ namespace Day08
 			return a;
 		}
 
-		return gcd(b, a%b);
+		return gcd(b, a % b);
 	}
 
 	uint64_t lcm(const uint64_t a, const uint64_t b)
