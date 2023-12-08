@@ -110,7 +110,7 @@ namespace AH
 		}
 	  
 		int tmp = IntPow(x, p/2);
-		
+
 		if (p%2 == 0)
 		{
 			return tmp * tmp;
