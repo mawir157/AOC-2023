@@ -1,5 +1,5 @@
 figlet Advent of Code -w 80 -c
-figlet 2022 -w 80 -c
+figlet 2023 -w 80 -c
 
 figlet Haskell -w 80 -c
 cd Haskell

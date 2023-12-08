@@ -8,9 +8,8 @@ import (
 	"strings"
 )
 
-var CARDS       = "AKQJT98765432"
-var CARDSJ      = "AKQT98765432J"
-var CARDSNOJOKE = "AKQT98765432"
+var CARDS  = "AKQJT98765432"
+var CARDSJ = "AKQT98765432J"
 
 type Hand struct {
 	cards string
@@ -70,7 +69,10 @@ func handRank(hand string) int {
 
 func handRankWithJokers(hand string) int {
 	best := 0
-	for _, c := range CARDSNOJOKE {
+	for _, c := range CARDS {
+		if (c == 'J') {
+			continue
+		}
 		hand_copy := strings.Replace(hand, "J", string(c), 5)
 		v := handRank(hand_copy)
 		if best < v {
