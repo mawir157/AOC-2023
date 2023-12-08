@@ -34,7 +34,7 @@ namespace Day08
 	}
 
 	int runUntilMatch(const std::string src, const std::string tgt,
-		const std::vector<int> ins, const Rules rs)
+		const std::vector<int> ins, const Rules rs, const bool part2=false)
 	{
 		int i = 0;
 		auto cur = src;
@@ -42,25 +42,14 @@ namespace Day08
 			for (auto in : ins) {
 				cur = rs.at(cur)[in];
 				i++;
-				if (cur == tgt) {
-					return i;
-				}
-			}
-		}
-		return 0;
-	}
-
-	uint64_t runUntilFinalMatch(const std::string src, const char t,
-		const std::vector<int> ins, const Rules rs)
-	{
-		auto cur = src;
-		uint64_t i = 0;
-		while (true) {
-			for (auto in : ins) {
-				cur = rs.at(cur)[in];
-				i++;
-				if (cur.back() == t) {
-					return i;
+				if (!part2) {
+					if (cur == tgt) {
+						return i;
+					}
+				} else {
+					if (cur.back() == tgt.back()) {
+						return i;
+					}			
 				}
 			}
 		}
@@ -109,7 +98,7 @@ namespace Day08
 
 		auto gn = findNodesEndingIn(rs, 'A');
 		for (auto n : gn) {
-			part2 = lcm(part2, runUntilFinalMatch(n, 'Z', ins, rs));
+			part2 = lcm(part2, runUntilMatch(n, "ZZZ", ins, rs, true));
 		}
 
 		AH::PrintSoln(8, part1, part2);
