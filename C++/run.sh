@@ -33,7 +33,7 @@ else
 		fi
 	done
 	g++ *.cpp -O2 -o aoc2023 -std=c++17 $COMPILERSTRING
-	./aoc2022
+	./aoc2023
 	rm -rf aoc2023
 	if [ "$missing" != "" ]
 	then
