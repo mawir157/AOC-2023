@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 // This func must be Exported, Capitalized, and comment added.
@@ -188,6 +189,19 @@ func Drop(s string, n int) string {
 func Take(s string, n int) string {
 	rs := []rune(s)
   return string(rs[:n])
+}
+
+func TakeWhileDigit(s string) string {
+	rs := []rune{}
+	for _, c := range s {
+		if (unicode.IsDigit(c)) {
+			rs = append(rs, c)
+		} else {
+			break
+		}
+	}
+
+	return string(rs)
 }
 
 // Reverse A String!
