@@ -28,7 +28,7 @@ namespace Day10
 		// at this point c == S, we are at the start
 		std::vector<Pos> startNbrs;
 
-		const std::string above = "F7|", left = "FL-", down ="JL|", right = "7-";
+		const std::string above = "F7|", left = "FL-", down ="JL|", right = "J7-";
 		if (above.find(ps[p.first-1][p.second]) != std::string::npos) { // valid above chars
 			startNbrs.emplace_back(p.first-1, p.second);
 		}
@@ -65,25 +65,25 @@ namespace Day10
 
 		// First move needs a bit of admin, can go in either direction
 		const Pos start = findStart(ps);
-		Pos next = start;
-		Pos prev, prevprev;
+		Pos cur = start;
+		Pos prev;
 
-		bound[next.first][next.second] = 1;
+		bound[cur.first][cur.second] = 1;
 		++ret;
 
-		auto nbrs = moves(next, ps);
-		prevprev = start;
-		prev = start;
-		next = nbrs[0]; // can pick either move here wlog
+		auto nbrs = moves(cur, ps);
+		prev = cur;
+		cur = nbrs[0]; // can pick either move here wlog
 
-		while (next != start) {
-			bound[next.first][next.second] = 1;
+		while (cur != start) {
+			bound[cur.first][cur.second] = 1;
 			++ret;
 
-			nbrs = moves(next, ps);
-			prevprev = prev;
-			prev = next;
-			next = (nbrs[0] == prevprev) ? nbrs[1] : nbrs[0];
+			nbrs = moves(cur, ps);
+			// prevprev = prev;
+			const bool use1 = (nbrs[0] == prev);
+			prev = cur;
+			cur = (use1) ? nbrs[1] : nbrs[0];
 		}
 
 		return ret / 2;
@@ -118,7 +118,6 @@ namespace Day10
 				}
 			}
 		}
-
 
 		return ret;
 	}
