@@ -15,17 +15,18 @@ namespace AH
 		return;
 	}
 
-	// void PrintSoln(const int day, const std::string soln1, const std::string soln2);
 	void PrintSolnFinal(const int day, const uint64_t soln1);
 	std::vector<std::string> ReadTextFile(const std::string& filename);
 	std::vector<std::string> ParseLineGroups(const std::vector<std::string>& ss,
 		                                       const char sep=' ');
 	std::vector<std::string> Split(const std::string &s, char delim);
-	std::vector<std::string> SplitOnString(const std::string &s, 
+	std::vector<std::string> SplitOnString(const std::string &s,
 		                                     const std::string delim);
 
 	std::string trim(const std::string & str);
+	// string-to-int64 conversion
 	uint64_t stoui64(const std::string s);
+	int64_t stoi64(const std::string s);
 	// Maths
 	uint64_t IntPow(const uint64_t x, const uint64_t p);
 	template <typename T> int sgn(T val) {

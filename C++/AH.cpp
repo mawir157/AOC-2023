@@ -108,7 +108,7 @@ namespace AH
 		{
 			return x;
 		}
-	  
+
 		int tmp = IntPow(x, p/2);
 
 		if (p%2 == 0)
@@ -125,7 +125,14 @@ namespace AH
 		uint64_t value;
 		std::istringstream iss(s);
 		iss >> value;
-		return value; 
+		return value;
+	}
+
+	int64_t stoi64(const std::string s) {
+		int64_t value;
+		std::istringstream iss(s);
+		iss >> value;
+		return value;
 	}
 
 }

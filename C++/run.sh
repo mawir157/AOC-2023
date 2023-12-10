@@ -5,6 +5,11 @@ else
   day=-1
 fi
 
+if test -f aoc2023;
+then
+	rm -rf aoc2023
+fi
+
 if [ $day -gt 0 ]
 then
 	if test -f Day$day.cpp;
