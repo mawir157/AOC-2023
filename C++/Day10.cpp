@@ -58,74 +58,54 @@ namespace Day10
 		return { 0, 0 };
 	}
 
-	std::set<Pos> pipes(const std::vector<std::string> ps)
+	int pipes(const std::vector<std::string> ps,
+		std::vector<std::vector<int>> & bound)
 	{
 		int ret = 0;
-		std::set<Pos> boundary;
 
 		// First move needs a bit of admin, can go in either direction
 		const Pos start = findStart(ps);
-		printf("start [%c] = (%ld, %ld)\n", ps[start.first][start.second], start.first, start.second);
-
 		Pos next = start;
 		Pos prev, prevprev;
 
+		bound[next.first][next.second] = 1;
 		++ret;
+
 		auto nbrs = moves(next, ps);
 		prevprev = start;
 		prev = start;
 		next = nbrs[0]; // can pick either move here wlog
-		boundary.insert(start);
 
 		while (next != start) {
-			boundary.insert(next);
+			bound[next.first][next.second] = 1;
 			++ret;
+
 			nbrs = moves(next, ps);
 			prevprev = prev;
 			prev = next;
 			next = (nbrs[0] == prevprev) ? nbrs[1] : nbrs[0];
 		}
 
-		return boundary;
+		return ret / 2;
 	}
 
-	bool inBoundary(const size_t r, const size_t s, const std::set<Pos> bd)
-	{
-		const Pos p = { r, s };
-
-		return bd.find(p) != bd.end();
-	}
-
-	int jordanCurveTheorem(const std::vector<std::string> grid, const std::set<Pos> bd)
+	int jordanCurveTheorem(const std::vector<std::string> grid,
+		const std::vector<std::vector<int>> bound)
 	{
 		int ret = 0;
 		for (size_t r = 0; r < grid.size(); ++r) {
 			int bd_count_lr = 0;
 			char last = 'X';
 			for (size_t c = 0; c < grid[r].size(); ++c) {
-				if (inBoundary(r, c, bd)) {
+				if (bound[r][c] != 0) {
 					char t = grid[r][c];
 
-					if (t == '-') {
-						continue;
-					}
-
-					if (t == '|') {
+					if (
+						(t == '|') ||
+						((t == 'J') && (last == 'F')) ||
+						((t == '7') && (last == 'L'))
+						) {
 						++bd_count_lr;
-					}
-
-					if (t == 'J') {
-						if (last == 'F') {
-							++bd_count_lr;
-						}
-						last = 'X';
-					}
-
-					if (t == '7') {
-						if (last == 'L') {
-							++bd_count_lr;
-						}
-						last = 'X';
 					}
 
 					if ((t == 'F') || (t == 'L')) {
@@ -145,12 +125,13 @@ namespace Day10
 
 	int Run(const std::string& filename)
 	{
-		const std::vector<std::string> inputLines = AH::ReadTextFile(filename);
+		const std::vector<std::string> ls = AH::ReadTextFile(filename);
+		std::vector<std::vector<int>> bound(ls.size(), std::vector<int>(ls[0].size(), 0));
 
-		const auto bd = pipes(inputLines);
-		int part2 = jordanCurveTheorem(inputLines, bd);
+		const auto part1 = pipes(ls, bound);
+		int part2 = jordanCurveTheorem(ls, bound);
 
-		AH::PrintSoln(10, bd.size() / 2, part2);
+		AH::PrintSoln(10, part1, part2);
 
 		return 0;
 	}
