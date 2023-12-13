@@ -49,7 +49,7 @@ namespace Day08
 				} else {
 					if (cur.back() == tgt.back()) {
 						return i;
-					}			
+					}
 				}
 			}
 		}
@@ -68,24 +68,6 @@ namespace Day08
 		return goodNodes;
 	}
 
-	uint64_t gcd(const uint64_t a, const uint64_t b)
-	{
-		if (b == 0) {
-			return a;
-		}
-
-		return gcd(b, a % b);
-	}
-
-	uint64_t lcm(const uint64_t a, const uint64_t b)
-	{
-		if (a > b) {
-			return (a / gcd(a,b)) * b;
-		} else {
-			return (b / gcd(a,b)) * a;    
-		}
-	} 
-
 	int Run(const std::string& filename)
 	{
 		const auto inputLines = AH::ReadTextFile(filename);
@@ -98,7 +80,7 @@ namespace Day08
 
 		auto gn = findNodesEndingIn(rs, 'A');
 		for (auto n : gn) {
-			part2 = lcm(part2, runUntilMatch(n, "ZZZ", ins, rs, true));
+			part2 = std::lcm(part2, runUntilMatch(n, "ZZZ", ins, rs, true));
 		}
 
 		AH::PrintSoln(8, part1, part2);

@@ -3,13 +3,14 @@
 namespace Day03
 {
 
-	std::pair<int, int> fn(const std::vector<std::string> ss) {
+	std::pair<int, int> fn(const std::vector<std::string> ss)
+	{
 		int part1 = 0;
 		int part2 = 0;
 		std::map<int, int> gears;
-		for (int r = 0; r < ss.size(); ++r) {
+		for (int r = 0; r < (int)ss.size(); ++r) {
 			const auto s = ss[r];
-			for (int c = 0; c < s.size(); ++c) {
+			for (int c = 0; c < (int)s.size(); ++c) {
 				const auto ch = s.at(c);
 				if (isdigit(ch)) {
 					auto idx = s.find_first_not_of("0123456789", c);
@@ -37,10 +38,11 @@ namespace Day03
 						const auto v = stoi(s.substr(c, idx - c));
 						part1 += v;
 						if (gear_idx != 0) {
-							if (gears.count(gear_idx)) // we have seen this gear before
+							if (gears.count(gear_idx)) { // we have seen this gear before
 								part2 += gears[gear_idx] * v;
-							else
+							} else {
 								gears[gear_idx] += v;
+							}
 						}
 					}
 

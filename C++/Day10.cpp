@@ -42,7 +42,6 @@ namespace Day10
 			startNbrs.emplace_back(p.first, p.second+1);
 		}
 
-
 		return startNbrs;
 	}
 
@@ -80,7 +79,6 @@ namespace Day10
 			++ret;
 
 			nbrs = moves(cur, ps);
-			// prevprev = prev;
 			const bool use1 = (nbrs[0] == prev);
 			prev = cur;
 			cur = (use1) ? nbrs[1] : nbrs[0];

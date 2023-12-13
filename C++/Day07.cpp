@@ -5,7 +5,6 @@ namespace Day07
 
 	const std::string CARDS  = "AKQJT98765432";
 	const std::string CARDSJ = "AKQT98765432J";
-	const std::string CARDSNOJOKE = "AKQT98765432";
 
 	std::pair<std::string, int> parseInput(std::string s)
 	{
@@ -63,7 +62,8 @@ namespace Day07
 	int handRankWithJokers(const std::string hand)
 	{
 		int best = 0;
-		for (auto c : CARDSNOJOKE) {
+		for (auto c : CARDS) {
+			if (c == 'J') continue;
 			auto s = hand;
 			std::replace( s.begin(), s.end(), 'J', c);
 			best = std::max(best, handRank(s));

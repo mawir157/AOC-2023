@@ -123,8 +123,6 @@ namespace Day05
 		const auto inputLines = AH::ReadTextFile(filename);
 		const auto ss = AH::ParseLineGroups(inputLines, '|');
 
-		std::vector<mapping> m1 = parseMapping(ss[1]);
-
 		std::vector<std::vector<mapping>> mss;
 		for (size_t i = 1; i < ss.size(); ++i) {
 			mss.push_back(parseMapping(ss[i]));
@@ -132,26 +130,20 @@ namespace Day05
 
 		const auto seeds = parseSeeds(ss[0]);
 
-		std::vector<uint64_t> seed_final(seeds.size());
-
-		for (size_t i = 0; i < seeds.size(); ++i) {
-			uint64_t seed = seeds[i];
+		uint64_t part1 = std::numeric_limits<uint64_t>::max();
+		for (auto seed : seeds) {
 			for (auto ms : mss) {
 				seed = applyMappingsToInt(seed, ms);
 			}
-			seed_final[i] = seed;
+			part1 = std::min(part1, seed);
 		}
 
-		uint64_t part1 = *std::min_element(seed_final.begin(), seed_final.end());
-
 		auto seed_ranges = parseSeedsToRanges(ss[0]);
-
-		std::list<Range> processed_ranges;
 		for (auto ms : mss) {
 			applyMappingToRanges(seed_ranges, ms);
 		}
 
-		uint64_t part2 = seed_ranges.front().first;
+		uint64_t part2 = std::numeric_limits<uint64_t>::max();
 		for (auto r : seed_ranges) {
 			part2 = std::min(r.first, part2);
 		}

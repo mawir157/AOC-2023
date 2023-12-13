@@ -6,9 +6,8 @@ namespace Day02
 	std::map<std::string, int> maxSeen(const std::string game)
 	{
 		std::map<std::string, int> colours = {
-                { "r", 0 },
-                { "g", 0 },
-                { "b", 0 } };
+		  { "r", 0 }, { "g", 0 }, { "b", 0 }
+		};
 
 		const int space = game.find(":");
 		std::string parsed = game.substr(space+1);
@@ -20,7 +19,7 @@ namespace Day02
 				const int gap = col.find(" ", 1);
 				const int int_part = stoi(col.substr(1, gap));
 				const std::string col_part = col.substr(gap+1, 1);
-				
+
 				if (colours.at(col_part) < int_part) {
 					colours.at(col_part) = int_part;
 				}
@@ -30,16 +29,18 @@ namespace Day02
 		return colours;
 	}
 
-	bool validateGame(const std::map<std::string, int> seen,
-		const std::map<std::string, int> target, int & part2) {
+	bool validateGame(const std::string game,
+		const std::map<std::string, int> target, int & part2)
+	{
+		const auto seen = maxSeen(game);
 
-		int ret = 1;
-		for (auto& x: seen) {
-			ret *= x.second;
+		int prod = 1;
+		for (auto & x: seen) {
+			prod *= x.second;
 		}
-		part2 += ret;
+		part2 += prod;
 
-		for (auto& x: target) {
+		for (auto & x: target) {
 			if (x.second < seen.at(x.first)) {
 				return false;
 			}
@@ -53,16 +54,12 @@ namespace Day02
 		const std::map<std::string, int> target =
 		{ {"r", 12}, {"g", 13}, {"b", 14} };
 
-		int i = 0;
 		int part1 = 0, part2 = 0;
-		for (auto l : inputLines) {
-			i++;
-			const auto m = maxSeen(l);
-
-			if (validateGame(m , target, part2)) {
-				part1 += i;
+		for (size_t i = 0; i < inputLines.size(); ++i) {
+			if (validateGame(inputLines[i], target, part2)) {
+				part1 += (int)(i + 1);
 			}
-		}		
+		}
 
 		AH::PrintSoln(2, part1, part2);
 

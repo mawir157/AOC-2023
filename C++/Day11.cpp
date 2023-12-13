@@ -5,10 +5,8 @@ namespace Day11
 
 	int64_t	 parseInput(std::vector<std::string> ss, const int64_t expansion = 1)
 	{
-		std::vector<int64_t> empty_rows;
 		int64_t row_offset = 0;
 		std::vector<int64_t> empty_cols;
-		int64_t col_offset = 0;
 
 		// find empty cols
 		for (int64_t ic = 0; ic < (int64_t)ss[0].size(); ++ic) {
@@ -30,7 +28,7 @@ namespace Day11
 			if (s.find_first_not_of(s[0]) == std::string::npos) {
 				row_offset += expansion;
 			}
-			col_offset = 0;
+			int64_t col_offset = 0;
 			for (int64_t ic = 0; ic < (int64_t)s.size(); ++ic) {
 				// this column is empty
 				if(std::find(empty_cols.begin(), empty_cols.end(), ic) != empty_cols.end()) {

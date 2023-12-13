@@ -24,9 +24,8 @@ namespace Day06
 	// use a binary search to find the roots of the quadratic
 	uint64_t race(const uint64_t time, const uint64_t distance)
 	{
-		const uint64_t half_t = time / 2;
 		uint64_t min_lo = 0;
-		uint64_t min_hi = half_t;
+		uint64_t min_hi = time / 2;
 
 		while (min_hi - min_lo > 1) {
 			const uint64_t cand = (min_hi + min_lo) / 2;

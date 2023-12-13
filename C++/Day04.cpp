@@ -27,7 +27,8 @@ namespace Day04
 		return;
 	}
 
-	int scoreCard(const std::vector<int> winning, const std::vector<int> scratchcard) {
+	int scoreCard(const std::vector<int> winning, const std::vector<int> scratchcard)
+	{
 		int score = 0;
 		for (auto card : scratchcard) {
 			if (std::find(winning.begin(), winning.end(), card) != winning.end()) {
