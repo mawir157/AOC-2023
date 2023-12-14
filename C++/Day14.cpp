@@ -12,8 +12,7 @@ namespace Day14
 				for (int r = 0; r < (int)grid.size() - 1; ++r) {
 					if ((grid[r].at(c) == '.') &&
 					    (grid[r + 1].at(c) == 'O')) {
-						grid[r][c] = 'O';
-						grid[r+1][c] = '.';
+						std::swap(grid[r][c], grid[r+1][c]);
 						moved = true;
 					}
 				}
@@ -26,13 +25,11 @@ namespace Day14
 	void rotateNegative(std::vector<std::string> & grid)
 	{
 		const int N = grid.size();// grid is square
-		for (int r = 0; r < N / 2; r++) {
-			for (int c = r; c < N - r - 1; c++) {
-				char temp                  = grid[r][c];
-				grid[r][c]                 = grid[N - 1 - c][r];
-				grid[N - 1 - c][r]         = grid[N - 1 - r][N - 1 - c];
-				grid[N - 1 - r][N - 1 - c] = grid[c][N - 1 - r];
-				grid[c][N - 1 - r]         = temp;
+		for (int r = 0; r < N / 2; ++r) {
+			for (int c = r; c < N - r - 1; ++c) {
+				std::swap(grid[r][c],                 grid[N - 1 - c][r]);
+				std::swap(grid[N - 1 - c][r],         grid[N - 1 - r][N - 1 - c]);
+				std::swap(grid[N - 1 - r][N - 1 - c], grid[c][N - 1 - r]);
 			}
 		}
 
