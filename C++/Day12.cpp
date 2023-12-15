@@ -28,40 +28,40 @@ namespace Day12
 			//..so just return it
 			return g_cache[globaLookUp];
 		}
-	  // try to fit the first blocks
-	  int toFit = is[is_idx];
-	  auto from = pattern.find_first_of("?#", pattern_idx);
-	  if (from == std::string::npos) {
-	  	// there are no ?s or #s left
-	  	return 0;
-	  }
-	  for (size_t i = from;  i < pattern.size() - (toFit - 1); ++i) { // check for OBOE
-		  // is there a . in the next toFit characters, if so can't write here
-	  	if (pattern.find(".", i) < i + toFit) {
-	  		continue;
-	  	}
+		// try to fit the first blocks
+		int toFit = is[is_idx];
+		auto from = pattern.find_first_of("?#", pattern_idx);
+		if (from == std::string::npos) {
+			// there are no ?s or #s left
+			return 0;
+		}
+		for (size_t i = from; i < pattern.size() - (toFit - 1); ++i) { // check for OBOE
+			// is there a . in the next toFit characters, if so can't write here
+			if (pattern.find(".", i) < i + toFit) {
+				continue;
+			}
 
-	  	// if there is a # before i we will miss it so there are no valid packings
-	  	if (pattern.find('#', pattern_idx) < i) {
-	  		break;
-	  	}
+			// if there is a # before i we will miss it so there are no valid packings
+			if (pattern.find('#', pattern_idx) < i) {
+				break;
+			}
 
-	  	// we can write out block here so check the next char isn't a #
-	  	// some optimisation here if is.size() == 1
-	  	if (i + toFit < pattern.size()) {
-	  		if (pattern.at(i + toFit) == '#') {
-	  			continue;
-	  		}
-	  	}
+			// we can write out block here so check the next char isn't a #
+			// some optimisation here if is.size() == 1
+			if (i + toFit < pattern.size()) {
+				if (pattern.at(i + toFit) == '#') {
+					continue;
+				}
+			}
 
-	  	// at this point we can def write out so shift indices and recur
-	  	auto next_pattern_idx = pattern.find_first_of("?#", i + toFit + 1);
-	  	waysToPack += numberOfSolns(pattern, is, next_pattern_idx, is_idx + 1);
-	  }
+			// at this point we can def write out so shift indices and recur
+			auto next_pattern_idx = pattern.find_first_of("?#", i + toFit + 1);
+			waysToPack += numberOfSolns(pattern, is, next_pattern_idx, is_idx + 1);
+		}
 
-	  // cache this result so other branches can use it
-	  g_cache[globaLookUp] = waysToPack;
-	  return waysToPack;
+		// cache this result so other branches can use it
+		g_cache[globaLookUp] = waysToPack;
+		return waysToPack;
 	}
 
 	int64_t parseInput(const std::string & s, const bool expand)
@@ -86,7 +86,7 @@ namespace Day12
 			}
 
 			for (auto i = 0; i < 5; ++i) {
-    		std::copy(partitions.begin(), partitions.end(), std::back_inserter(parts5));
+				std::copy(partitions.begin(), partitions.end(), std::back_inserter(parts5));
 			}
 
 			return numberOfSolns(str5, parts5, 0, 0);
@@ -95,7 +95,7 @@ namespace Day12
 		return numberOfSolns(ps[0], partitions, 0, 0);
 	}
 
-	int64_t Run(const std::string& filename)
+	int Run(const std::string& filename)
 	{
 		const std::vector<std::string> ls = AH::ReadTextFile(filename);
 

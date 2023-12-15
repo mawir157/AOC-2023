@@ -53,10 +53,9 @@ namespace Day11
 		return ret;
 	}
 
-	int64_t Run(const std::string& filename)
+	int Run(const std::string& filename)
 	{
 		const std::vector<std::string> ls = AH::ReadTextFile(filename);
-		std::vector<std::vector<int64_t>> ds;
 
 		AH::PrintSoln(11, parseInput(ls), parseInput(ls, 999999));
 

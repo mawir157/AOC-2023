@@ -38,12 +38,48 @@ namespace Day06
 		return time - min_lo - min_hi;
 	}
 
+	std::vector<std::pair<uint64_t, uint64_t>> parseInput(
+		std::string times, std::string distances, const bool part2=false)
+	{
+		if (part2) {
+			times.erase(std::remove_if(times.begin(),  times.end(),
+			            [](unsigned char x) { return std::isspace(x); }),
+			            times.end());
+			distances.erase(std::remove_if(distances.begin(),  distances.end(),
+			                [](unsigned char x) { return std::isspace(x); }),
+			                distances.end());
+		}
+		
+		auto colon = times.find(":");
+		auto temp = times.substr(colon+1);
+		std::vector<std::pair<uint64_t, uint64_t>> pairs;
+		auto ps = AH::Split(temp, ' ');
+		for (auto p : ps) {
+			if (p.size() > 0) {
+				pairs.emplace_back(AH::stoui64(p), 0);
+			}
+		}
+
+		colon = distances.find(":");
+		temp = distances.substr(colon+1);
+		ps = AH::Split(temp, ' ');
+		int i = 0;
+		for (auto p : ps) {
+			if (p.size() > 0) {
+				pairs[i].second = AH::stoui64(p);
+				++i;
+			}
+		}
+
+
+		return pairs;
+	}
+
 	int Run(const std::string& filename)
 	{
-		std::vector<std::pair<uint64_t, uint64_t>> input1 = { 
-			{52, 426}, {94, 1374}, {75, 1279}, {94, 1216}
-		};
-		std::pair<uint64_t, uint64_t> input2 = { 52947594, 426137412791216 };
+		const std::vector<std::string> ls = AH::ReadTextFile(filename);
+		const auto input1 = parseInput(ls[0], ls[1]);
+		const auto input2 = parseInput(ls[0], ls[1], true)[0];
 		uint64_t part1 = 1;
 		for (auto [time, dist] : input1) {
 			part1 *= race(time, dist);

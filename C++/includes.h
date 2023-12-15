@@ -7,6 +7,7 @@
 #include <fstream>
 #include <functional>
 #include <list>
+#include <map>
 #include <memory>
 #include <numeric>
 #include <regex>

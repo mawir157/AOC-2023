@@ -74,7 +74,7 @@ namespace Day14
 		return -1;
 	}
 
-	int64_t Run(const std::string& filename)
+	int Run(const std::string& filename)
 	{
 		auto ls = AH::ReadTextFile(filename);	
 

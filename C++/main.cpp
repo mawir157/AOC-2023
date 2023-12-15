@@ -1,6 +1,6 @@
 #include "days.h"
 
-int main(int argc, char const *argv[])
+int main()
 {
 	#ifdef DAY01
 	Day01::Run("../input/input01.txt");

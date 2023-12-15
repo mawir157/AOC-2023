@@ -29,7 +29,7 @@ namespace Day01
 			}
 		}
 
-		for (size_t i = cal.size() - 1; i >= 0; --i) {
+		for (int i = (int)cal.size() - 1; i >= 0; --i) {
 			const char c = cal[i];
 			if ( isdigit(c) ) {
 				ret += (c - '0');

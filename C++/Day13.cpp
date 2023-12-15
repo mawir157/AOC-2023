@@ -99,7 +99,7 @@ namespace Day13
 		return -1;
 	}
 
-	int64_t Run(const std::string& filename)
+	int Run(const std::string& filename)
 	{
 		const auto ls = AH::ReadTextFile(filename);
 		const auto gs = AH::ParseLineGroups(ls, '|');
