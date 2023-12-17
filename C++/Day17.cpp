@@ -106,7 +106,7 @@ namespace Day17
 		return ret;
 	}
 
-	Pos findSmallest(const std::set<int> Q, const Grid3 & dist)
+	Pos findSmallest(const std::set<int> Q, const Grid3 & dist, const int minSeen=0)
 	{
 		Pos ret(-1, -1, -1);
 		int smallest = 1e6 + 1;
@@ -116,7 +116,11 @@ namespace Day17
 			if (d < smallest) {
 				smallest = d;
 				ret = p;
+				if (smallest == minSeen) {
+					break;
+				}
 			}
+
 		}
 		return ret;
 	}
@@ -145,28 +149,28 @@ namespace Day17
 		    std::vector<std::vector<int>>(grid[0].size(),
 		      std::vector<int>(2)));
 		std::set<int> V;
-		std::set<int> Q;
 		const int HUGE = 1e6;
 
 		for (int i = 0; i < (int)grid.size(); ++i) {
 			for (int j = 0; j < (int)grid[i].size(); ++j) {
 				for (int d = 0; d < 2; ++d) {
 					dist[i][j][d] = HUGE;
-					Q.insert(hashPos(i,j,d));
 				}
 			}
 		}
 
 		dist[start.r][start.c][start.d % 2] = grid[start.r][start.c % 2];
 		V.insert(hashPos(start));
+		int minSeen = dist[start.r][start.c][start.d];
 
 		while (V.size() > 0) {
-			const auto u = findSmallest(V, dist);
+			const auto u = findSmallest(V, dist, minSeen);
+			minSeen = dist[u.r][u.c][u.d % 2];
 			V.erase(hashPos(u));
 
 			const auto nbrs = nbrsOfPos(u, grid.size(), grid[0].size(), ultra);
 			for (auto n : nbrs) {
-				const auto l = dist[u.r][u.c][u.d % 2] + cost(u, n, grid);
+				const auto l = minSeen + cost(u, n, grid);
 				if (l < dist[n.r][n.c][n.d % 2]) {
 					dist[n.r][n.c][n.d % 2] = l;
 					V.insert(hashPos(n));
