@@ -112,7 +112,7 @@ namespace Day17
 		int smallest = 1e6 + 1;
 		for (auto k : Q) {
 			const auto p = dehashPos(k);
-			const auto d = dist[p.r][p.c][p.d];
+			const auto d = dist[p.r][p.c][p.d % 2];
 			if (d < smallest) {
 				smallest = d;
 				ret = p;
@@ -140,25 +140,24 @@ namespace Day17
 	int shortestPath1(const Grid & grid, const Pos start, const Pos target,
 		const bool ultra=false)
 	{
-		// Grid dist = grid;
 		Grid3 dist =
 		  std::vector<std::vector<std::vector<int>>>(grid.size(),
 		    std::vector<std::vector<int>>(grid[0].size(),
-		      std::vector<int>(4)));
+		      std::vector<int>(2)));
 		std::set<int> V;
 		std::set<int> Q;
 		const int HUGE = 1e6;
 
 		for (int i = 0; i < (int)grid.size(); ++i) {
 			for (int j = 0; j < (int)grid[i].size(); ++j) {
-				for (int d = 0; d < 4; ++d) {
+				for (int d = 0; d < 2; ++d) {
 					dist[i][j][d] = HUGE;
 					Q.insert(hashPos(i,j,d));
 				}
 			}
 		}
 
-		dist[start.r][start.c][start.d] = grid[start.r][start.c];
+		dist[start.r][start.c][start.d % 2] = grid[start.r][start.c % 2];
 		V.insert(hashPos(start));
 
 		while (V.size() > 0) {
@@ -167,16 +166,16 @@ namespace Day17
 
 			const auto nbrs = nbrsOfPos(u, grid.size(), grid[0].size(), ultra);
 			for (auto n : nbrs) {
-				const auto l = dist[u.r][u.c][u.d] + cost(u, n, grid);
-				if (l < dist[n.r][n.c][n.d]) {
-					dist[n.r][n.c][n.d] = l;
+				const auto l = dist[u.r][u.c][u.d % 2] + cost(u, n, grid);
+				if (l < dist[n.r][n.c][n.d % 2]) {
+					dist[n.r][n.c][n.d % 2] = l;
 					V.insert(hashPos(n));
 				}
 			}
 		}
 
 		int best = HUGE;
-		for (int i = 0; i < 4; ++i) {
+		for (int i = 0; i < 2; ++i) {
 			best = std::min(best, dist[target.r][target.c][i]);
 		}
 
@@ -188,7 +187,7 @@ namespace Day17
 		const auto ls = AH::ReadTextFile(filename);
 		const auto grid = parseInput(ls);
 
-		const auto part1W = shortestPath1(grid, Pos(0,0,0), Pos(grid.size() - 1, grid[0].size() - 1, 0));
+		const auto part1W = shortestPath1(grid, Pos(0,0,0), Pos(grid.size() - 1,grid[0].size() - 1, 0));
 		const auto part1S = shortestPath1(grid, Pos(0,0,3), Pos(grid.size() - 1, grid[0].size() - 1, 0));
 
 		const auto part2W = shortestPath1(grid, Pos(0,0,0), Pos(grid.size() - 1, grid[0].size() - 1, 0), true);
