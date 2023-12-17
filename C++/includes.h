@@ -2,10 +2,12 @@
 
 #include <algorithm>
 // #include <cmath>
+#include <cstdint>
 // #include <deque>
 #include <iostream>
 #include <fstream>
 // #include <functional>
+#include <limits>
 #include <list>
 #include <map>
 // #include <memory>
