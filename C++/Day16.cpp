@@ -56,7 +56,7 @@ namespace Day16
 
 	void fireTheLaser(const std::vector<std::string> & ms,
 	  std::vector<std::vector<int>> & grid, const BeamState beam,
-	  std::set<BeamState> & path, int depth=0)
+	  std::set<BeamState> & path)
 	{
 		auto b = beam;
 
@@ -82,21 +82,21 @@ namespace Day16
 				auto b_N = b;
 				b_N.d = 1;
 				b_N.r -= 1;
-				fireTheLaser(ms, grid, b_N, path, depth+1);
+				fireTheLaser(ms, grid, b_N, path);
 				auto b_S = b;
 				b_S.d = 3;
 				b_S.r += 1;
-				fireTheLaser(ms, grid, b_S, path, depth+1);
+				fireTheLaser(ms, grid, b_S, path);
 				break;
 			} else if ((c == '-') && (b.d % 2 == 1)) {
 				auto b_W = b;
 				b_W.d = 0;
 				b_W.c += 1;
-				fireTheLaser(ms, grid, b_W, path, depth+1);
+				fireTheLaser(ms, grid, b_W, path);
 				auto b_E = b;
 				b_E.d = 2;
 				b_E.c -= 1;
-				fireTheLaser(ms, grid, b_E, path, depth+1);
+				fireTheLaser(ms, grid, b_E, path);
 				break;
 			} else {
 				b = updateBeam(b, c);
@@ -121,45 +121,52 @@ namespace Day16
 	int part2Ignorance(const std::vector<std::string> & ls)
 	{
 		int best = 0;
-		// top row
-		for (int c = 0; c < ls[0].size(); ++c) {
-			// top heading south
-			std::vector<std::vector<int>> grid(
+		std::vector<std::vector<int>> grid(
 				ls.size(), std::vector<int> (ls[0].size(), 0));
-			std::set<BeamState> path;
+		std::set<BeamState> path;
+		// top row
+		for (int c = 0; c < (int)ls[0].size(); ++c) {
+			// top heading south
+			for (auto & row : grid) {
+    			std::fill(row.begin(), row.end(), 0);
+			}
+			path.clear();
 			BeamState initial(0, c, 3);
 
 			fireTheLaser(ls, grid, initial, path);
 			best = std::max(best, sumGrid(grid));
 		}
 
-		for (int c = 0; c < ls[0].size(); ++c) {
+		for (int c = 0; c < (int)ls[0].size(); ++c) {
 			// bottom heading north
-			std::vector<std::vector<int>> grid(
-				ls.size(), std::vector<int> (ls[0].size(), 0));
-			std::set<BeamState> path;
+			for (auto & row : grid) {
+    			std::fill(row.begin(), row.end(), 0);
+			}
+			path.clear();
 			BeamState initial(ls.size() - 1, c, 1);
 
 			fireTheLaser(ls, grid, initial, path);
 			best = std::max(best, sumGrid(grid));
 		}
 
-		for (int r = 0; r < ls.size(); ++r) {
+		for (int r = 0; r < (int)ls.size(); ++r) {
 			// left heading east
-			std::vector<std::vector<int>> grid(
-				ls.size(), std::vector<int> (ls[0].size(), 0));
-			std::set<BeamState> path;
+			for (auto & row : grid) {
+    			std::fill(row.begin(), row.end(), 0);
+			}
+			path.clear();
 			BeamState initial(r, 0, 2);
 
 			fireTheLaser(ls, grid, initial, path);
 			best = std::max(best, sumGrid(grid));
 		}
 
-		for (int r = 0; r < ls[0].size(); ++r) {
+		for (int r = 0; r < (int)ls[0].size(); ++r) {
 			// right heading west
-			std::vector<std::vector<int>> grid(
-				ls.size(), std::vector<int> (ls[0].size(), 0));
-			std::set<BeamState> path;
+			for (auto & row : grid) {
+    			std::fill(row.begin(), row.end(), 0);
+			}
+			path.clear();
 			BeamState initial(r, ls[0].size() - 1, 0);
 
 			fireTheLaser(ls, grid, initial, path);
@@ -181,7 +188,7 @@ namespace Day16
 		int part1 = sumGrid(grid);
 		int part2 = part2Ignorance(ls);
 
-		AH::PrintSoln(1, part1, part2);
+		AH::PrintSoln(16, part1, part2);
 
 		return 0;
 	}
