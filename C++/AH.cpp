@@ -4,6 +4,11 @@ namespace AH
 {
 	std::vector<std::string> ReadTextFile(const std::string& filename)
 	{
+		if (!std::filesystem::exists(filename)) {
+			printf("Could not find input file.\n");
+			exit(0);
+		}
+
 		std::string line;
 		std::vector<std::string> lines;
 		lines.reserve(10000);
