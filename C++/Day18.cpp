@@ -17,9 +17,7 @@ namespace Day18
 	{
 		const auto ss = AH::Split(s, ' ');
 		if (part1) {
-			const int64_t i = stoi(ss[1]);
-
-			return Instruction(ss[0], i);
+			return Instruction(ss[0], stoi(ss[1]));
 		} else {
 			const auto col = ss[2].substr(2,6);
 			const int64_t i = int64_t(col[5] -'0');
@@ -43,48 +41,33 @@ namespace Day18
 			}
 			const auto hex = "0x000" + col.substr(0, 5);
 			int64_t x = std::stoul(hex, nullptr, 16);
-			printf("%s -> %d\n", hex.c_str(), x);
 			return Instruction(dir, x);
 		}
 	}
 
-	Pos digTrench(int64_t & boundaryLength, const Pos p, 
-	const Instruction in)
+	void digTrench(int64_t & boundaryLength, Pos & p, const Instruction in)
 	{
-		Pos pp = p;
 		if (in.d == "L") {
-			for (int64_t i = 0; i < in.m; ++i) {
-				--pp.second;
-				++boundaryLength;
-			}
+			p.second -= in.m;
 		} else if (in.d == "U") {
-			for (int64_t i = 0; i < in.m; ++i) {
-				--pp.first;
-				++boundaryLength;
-			}
+			p.first -= in.m;
 		} else if (in.d == "R") {
-			for (int64_t i = 0; i < in.m; ++i) {
-				++pp.second;
-				++boundaryLength;
-			}		
+			p.second += in.m;
 		} else if (in.d == "D") {
-			for (int64_t i = 0; i < in.m; ++i) {
-				++pp.first;
-				++boundaryLength;
-			}
+			p.first += in.m;
 		}
+		boundaryLength += in.m;
 
-		return pp;
+		return;
 	}
 
 	int64_t simplePolygonArea(std::vector<Pos> vertices, const int64_t offset)
 	{
 		int64_t sum = offset;
 
-		for (int64_t i = 0; i < (vertices.size() - 1); ++i) {
+		for (size_t i = 0; i < (vertices.size() - 1); ++i) {
 			const auto p0 = vertices[i];
 			const auto p1 = vertices[i+1];
-			printf("(%d, %d) -> (%d, %d)\n", p0.first, p0.second, p1.first, p1.second);
 			sum += (p1.first * p0.second) - (p0.first * p1.second);
 		}
 
@@ -104,19 +87,17 @@ namespace Day18
 		verts1.push_back(here);
 		verts2.push_back(here2);
 		for (auto l : ls) {
-			const auto ins = parseInput(l);
-			here = digTrench(trenchLength1, here, ins);
+			digTrench(trenchLength1, here, parseInput(l));
 			verts1.push_back(here);
-			const auto ins2 = parseInput(l, false);
-			here2 = digTrench(trenchLength2, here2, ins2);
+			digTrench(trenchLength2, here2, parseInput(l, false));
 			verts2.push_back(here2);
 		}
 
 		// mysterious additional offset of 1 required...
-		const int64_t p1 = 1 + simplePolygonArea(verts1, trenchLength1);
-		const int64_t p2 = 1 + simplePolygonArea(verts2, trenchLength2);
+		const int64_t part1 = 1 + simplePolygonArea(verts1, trenchLength1);
+		const int64_t part2 = 1 + simplePolygonArea(verts2, trenchLength2);
 
-		AH::PrintSoln(18, p1, p2);
+		AH::PrintSoln(18, part1, part2);
 
 		return 0;
 	}
