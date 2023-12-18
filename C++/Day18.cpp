@@ -3,26 +3,26 @@
 namespace Day18
 {
 
-	typedef std::pair<int, int> Pos;
+	typedef std::pair<int64_t, int64_t> Pos;
 
 	struct Instruction
 	{
 	   std::string d;
-	   int m;
+	   int64_t m;
 
-	   Instruction(const std::string d, const int m) : d(d), m(m) {};
+	   Instruction(const std::string d, const int64_t m) : d(d), m(m) {};
 	};
 
 	Instruction parseInput(const std::string s, const bool part1=true)
 	{
 		const auto ss = AH::Split(s, ' ');
 		if (part1) {
-			const int i = stoi(ss[1]);
+			const int64_t i = stoi(ss[1]);
 
 			return Instruction(ss[0], i);
 		} else {
 			const auto col = ss[2].substr(2,6);
-			const int i = int(col[5] -'0');
+			const int64_t i = int64_t(col[5] -'0');
 			std::string dir = "0";
 			switch (i)
 			{
@@ -42,95 +42,81 @@ namespace Day18
 				break;
 			}
 			const auto hex = "0x000" + col.substr(0, 5);
-			int x = std::stoul(hex, nullptr, 16);
+			int64_t x = std::stoul(hex, nullptr, 16);
 			printf("%s -> %d\n", hex.c_str(), x);
 			return Instruction(dir, x);
 		}
 	}
 
-	Pos digTrench(std::map<Pos, bool> & trench, const Pos p, 
+	Pos digTrench(int64_t & boundaryLength, const Pos p, 
 	const Instruction in)
 	{
 		Pos pp = p;
 		if (in.d == "L") {
-			for (int i = 0; i < in.m; ++i) {
+			for (int64_t i = 0; i < in.m; ++i) {
 				--pp.second;
-				trench[pp] = true;
+				++boundaryLength;
 			}
 		} else if (in.d == "U") {
-			for (int i = 0; i < in.m; ++i) {
+			for (int64_t i = 0; i < in.m; ++i) {
 				--pp.first;
-				trench[pp] = true;
+				++boundaryLength;
 			}
 		} else if (in.d == "R") {
-			for (int i = 0; i < in.m; ++i) {
+			for (int64_t i = 0; i < in.m; ++i) {
 				++pp.second;
-				trench[pp] = true;
+				++boundaryLength;
 			}		
 		} else if (in.d == "D") {
-			for (int i = 0; i < in.m; ++i) {
+			for (int64_t i = 0; i < in.m; ++i) {
 				++pp.first;
-				trench[pp] = true;
+				++boundaryLength;
 			}
 		}
 
 		return pp;
 	}
 
-	void floodFill(std::map<Pos, bool> & trench, const Pos p)
+	int64_t simplePolygonArea(std::vector<Pos> vertices, const int64_t offset)
 	{
-		if (trench.count(p) != 0) { // sanity to check to find valid start
-			printf("ALREADY IN BOUNDARY KILL\n");
-			return;
-		}
-		
-		Pos p0 = p;
-		std::queue<Pos> todo;
-		trench[p0] = "FILLED";
-		todo.push(p0);
+		int64_t sum = offset;
 
-		while(todo.size() > 0) {
-			auto p0 = todo.front();
-			todo.pop();
-
-			std::vector<Pos> nbrs = {
-				{p0.first, p0.second-1},
-				{p0.first-1, p0.second},
-				{p0.first, p0.second+1},
-				{p0.first+1, p0.second}
-				}; 
-
-			for (auto n : nbrs) {
-				if (trench.count(n) == 0) {
-					trench[n] = true;
-					todo.push(n);
-				}				
-			}
+		for (int64_t i = 0; i < (vertices.size() - 1); ++i) {
+			const auto p0 = vertices[i];
+			const auto p1 = vertices[i+1];
+			printf("(%d, %d) -> (%d, %d)\n", p0.first, p0.second, p1.first, p1.second);
+			sum += (p1.first * p0.second) - (p0.first * p1.second);
 		}
 
-		return;
+		return std::abs(sum) / 2;
 	}
 
 	int Run(const std::string& filename)
 	{
 		const std::vector<std::string> ls = AH::ReadTextFile(filename);
 
-		std::map<Pos, bool> trench;
-		std::map<Pos, bool> trench2;
+		int64_t trenchLength1 = 0;
+		int64_t trenchLength2 = 0;
+		std::vector<Pos> verts1;
+		std::vector<Pos> verts2;
 		Pos here{0,0};
 		Pos here2{0,0};
+		verts1.push_back(here);
+		verts2.push_back(here2);
 		for (auto l : ls) {
 			const auto ins = parseInput(l);
-			here = digTrench(trench, here, ins);
-			// const auto ins2 = parseInput(l, false);
-			// here2 = digTrench(trench2, here2, ins2);
+			here = digTrench(trenchLength1, here, ins);
+			verts1.push_back(here);
+			const auto ins2 = parseInput(l, false);
+			here2 = digTrench(trenchLength2, here2, ins2);
+			verts2.push_back(here2);
 		}
 
-		// start found with a bit of trial and error
-		floodFill(trench, Pos{-1, 1});
-		// floodFill(trench2, Pos{-1, 1}); 
+		// mysterious additional offset of 1 required...
+		const int64_t p1 = 1 + simplePolygonArea(verts1, trenchLength1);
+		const int64_t p2 = 1 + simplePolygonArea(verts2, trenchLength2);
 
-		AH::PrintSoln(18, trench.size(), trench2.size());
+		AH::PrintSoln(18, p1, p2);
 
 		return 0;
 	}
