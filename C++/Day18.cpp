@@ -45,8 +45,9 @@ namespace Day18
 		}
 	}
 
-	void digTrench(int64_t & boundaryLength, Pos & p, const Instruction in)
+	void digTrench(int64_t & boundaryLength, std::vector<Pos> & verts, const Instruction in)
 	{
+		Pos p = verts.back();
 		if (in.d == "L") {
 			p.second -= in.m;
 		} else if (in.d == "U") {
@@ -57,6 +58,8 @@ namespace Day18
 			p.first += in.m;
 		}
 		boundaryLength += in.m;
+
+		verts.push_back(p);
 
 		return;
 	}
@@ -82,15 +85,13 @@ namespace Day18
 		int64_t trenchLength2 = 0;
 		std::vector<Pos> verts1;
 		std::vector<Pos> verts2;
-		Pos here{0,0};
-		Pos here2{0,0};
-		verts1.push_back(here);
-		verts2.push_back(here2);
+		verts1.reserve(ls.size() + 1);
+		verts2.reserve(ls.size() + 1);
+		verts1.emplace_back(0,0);
+		verts2.emplace_back(0,0);
 		for (auto l : ls) {
-			digTrench(trenchLength1, here, parseInput(l));
-			verts1.push_back(here);
-			digTrench(trenchLength2, here2, parseInput(l, false));
-			verts2.push_back(here2);
+			digTrench(trenchLength1, verts1, parseInput(l));
+			digTrench(trenchLength2, verts2, parseInput(l, false));
 		}
 
 		// mysterious additional offset of 1 required...
