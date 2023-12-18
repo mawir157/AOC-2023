@@ -12,6 +12,7 @@
 #include <map>
 // #include <memory>
 #include <numeric>
+#include <queue>
 // #include <regex>
 #include <string>
 #include <sstream>
