@@ -16,7 +16,7 @@ namespace Day22
 			xlo(xlo), xhi(xhi), ylo(ylo), yhi(yhi), zlo(zlo), zhi(zhi), hasFallen(false) {}
 
 		bool Contains(const int x, const int y, const int z) const;
-		bool CanFall(const std::vector<Block> & bs) const;
+		bool CanFall(const std::vector<Block> & bs, size_t skip) const;
 		void Fall(bool part2=false) { zlo--; zhi--; if (part2) { hasFallen = true; }}
 
 		friend bool operator==(const Block& l, const Block& r)
@@ -36,23 +36,24 @@ namespace Day22
 		return inx && iny && inz;
 	}
 
-	bool Block::CanFall(const std::vector<Block> & bs) const
+	bool Block::CanFall(const std::vector<Block> & bs, size_t skip=1e6) const
 	{
 		const int base = std::min(zlo, zhi);
 		if (base <= 1) {
 			return false;
 		}
 
-		for (auto b : bs) {
+		for (size_t i = 0; i < bs.size(); ++i) {
+			if (i == skip) continue;
+			const auto b = bs[i];
 			if (*this == b) {
 				continue;
 			}
-			for (int x = xlo; x <= xhi; ++x) {
-				for (int y = ylo; y <= yhi; ++y) {
-					if (b.Contains(x, y, base -1)) {
-						return false;
-					}
-				}
+
+			if ( (b.xlo <= xhi)      && (xlo <= b.xhi) &&
+				   (b.ylo <= yhi)      && (ylo <= b.yhi) &&
+				   (b.zlo <= (base-1)) && ((base-1) <= b.zhi) ) {
+					return false;
 			}
 		}
 
@@ -72,28 +73,15 @@ namespace Day22
 		return b;
 	}
 
-	std::pair<int,int> getXYBounds(const std::vector<Block> & bs)
-	{
-		int xmax = 0, ymax = 0;
-		for (auto b : bs) {
-			xmax = std::max(xmax, b.xhi);
-			ymax = std::max(ymax, b.yhi);
-		}
-
-		return { xmax, ymax };
-	}
-
 	int part1(const std::vector<Block> & bs)
 	{
 		int ret = 0;
 		for (size_t index = 0; index < bs.size(); ++index) {
-			auto copy_bs = bs;
-			copy_bs.erase(copy_bs.begin() + index);
-			// std::cout << "[" << index << "] "<< copy_bs.size() << "\n";
 			bool canFall = false;
-			for (auto b : copy_bs) {
-				// std::cout << "\t" << b.CanFall(copy_bs) << "\n"; 
-				canFall |= b.CanFall(copy_bs);
+			for (size_t i = 0; i < bs.size(); ++i) {
+				if (i == index) continue;
+				const auto b = bs[i];
+				canFall |= b.CanFall(bs, index);
 			}
 			if (!canFall) {
 				ret++;
@@ -107,20 +95,23 @@ namespace Day22
 	{
 		int ret = 0;
 		for (size_t index = 0; index < bs.size(); ++index) {
-			auto copy_bs = bs;
-			copy_bs.erase(copy_bs.begin() + index);
+			auto bss = bs;
 			bool falling = true;
 			while(falling) {
 				falling = false;
-				for (auto & b : copy_bs) {
-					if (b.CanFall(copy_bs)) {
+				for (size_t i = 0; i < bss.size(); ++i) {
+					if (i == index) continue;
+					auto & b = bss[i];
+					if (b.CanFall(bss, index)) {
 						falling = true;
 						b.Fall(true);
 					}
 				}
 			}
 
-			for (auto b : copy_bs) {
+			for (size_t i = 0; i < bss.size(); ++i) {
+				if (i == index) continue;
+			 	const auto b = bss[i];
 				if (b.hasFallen) {
 					ret++;
 				}
@@ -138,8 +129,6 @@ namespace Day22
 			bs.push_back(parseInput(l));
 		}
 
-		const auto [xx, yy] = getXYBounds(bs);
-
 		bool falling = true;
 		while(falling) {
 			falling = false;
@@ -150,8 +139,10 @@ namespace Day22
 				}
 			}
 		}
+		const auto p1 = part1(bs);
+		const auto p2 = part2(bs);
 
-		AH::PrintSoln(22, part1(bs), part2(bs));
+		AH::PrintSoln(22, p1, p2);
 
 		return 0;
 	}
