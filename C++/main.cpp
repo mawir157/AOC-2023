@@ -91,7 +91,7 @@ int main()
 	#endif
 
 	#ifdef DAY23
-	Day23::Run("NO INPUT FILE");
+	Day23::Run("../input/input23.txt");
 	#endif
 
 	#ifdef DAY24
