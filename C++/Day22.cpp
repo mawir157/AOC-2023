@@ -17,7 +17,14 @@ namespace Day22
 
 		bool Contains(const int x, const int y, const int z) const;
 		bool CanFall(const std::vector<Block> & bs, size_t skip) const;
-		void Fall(bool part2=false) { zlo--; zhi--; if (part2) { hasFallen = true; }}
+		int CanFallBy(const std::vector<Block> & bs, size_t skip) const;
+		void Fall(const int by, const bool part2=false) { 
+			zlo -= by;
+			zhi -= by;
+			if (part2) {
+				hasFallen = true;
+			}
+		}
 
 		friend bool operator==(const Block& l, const Block& r)
 		{
@@ -27,22 +34,14 @@ namespace Day22
 		}
 	};
 
-	bool Block::Contains(const int x, const int y, const int z) const
-	{
-		const bool inx = ((xlo <= x) && (x <= xhi));
-		const bool iny = ((ylo <= y) && (y <= yhi));
-		const bool inz = ((zlo <= z) && (z <= zhi));
-
-		return inx && iny && inz;
-	}
-
-	bool Block::CanFall(const std::vector<Block> & bs, size_t skip=1e6) const
+	int Block::CanFallBy(const std::vector<Block> & bs, size_t skip=1e6) const
 	{
 		const int base = std::min(zlo, zhi);
 		if (base <= 1) {
-			return false;
+			return 0;
 		}
 
+		int fallBy = base - 1; // the furthest we can fall
 		for (size_t i = 0; i < bs.size(); ++i) {
 			if (i == skip) continue;
 			const auto b = bs[i];
@@ -50,14 +49,17 @@ namespace Day22
 				continue;
 			}
 
-			if ( (b.xlo <= xhi)      && (xlo <= b.xhi) &&
-				   (b.ylo <= yhi)      && (ylo <= b.yhi) &&
-				   (b.zlo <= (base-1)) && ((base-1) <= b.zhi) ) {
-					return false;
+			// do the x-y shadows overlap?
+			if ( (b.xlo <= xhi) && (xlo <= b.xhi) &&
+				   (b.ylo <= yhi) && (ylo <= b.yhi) ) {
+				// if so is the top of this block below the bases
+				const int top = std::max(b.zlo, b.zhi);
+				if (base > top) {
+					fallBy = std::min(fallBy, base - top - 1);
+				}
 			}
-		}
-
-		return true;
+		}	
+		return fallBy;
 	}
 
 	Block parseInput(const std::string s)
@@ -77,13 +79,13 @@ namespace Day22
 	{
 		int ret = 0;
 		for (size_t index = 0; index < bs.size(); ++index) {
-			bool canFall = false;
+			int maxFall = 0;
 			for (size_t i = 0; i < bs.size(); ++i) {
 				if (i == index) continue;
 				const auto b = bs[i];
-				canFall |= b.CanFall(bs, index);
+				maxFall = std::max(maxFall, b.CanFallBy(bs, index));
 			}
-			if (!canFall) {
+			if (maxFall > 0) {
 				ret++;
 			} 
 		}
@@ -102,9 +104,11 @@ namespace Day22
 				for (size_t i = 0; i < bss.size(); ++i) {
 					if (i == index) continue;
 					auto & b = bss[i];
-					if (b.CanFall(bss, index)) {
+
+					const int by = b.CanFallBy(bss, index);
+					if (by > 0) {
 						falling = true;
-						b.Fall(true);
+						b.Fall(by, true);
 					}
 				}
 			}
@@ -130,12 +134,13 @@ namespace Day22
 		}
 
 		bool falling = true;
-		while(falling) {
+		while (falling) {
 			falling = false;
 			for (auto & b : bs) {
-				if (b.CanFall(bs)) {
+				const int by = b.CanFallBy(bs);
+				if (by > 0) {
 					falling = true;
-					b.Fall();
+					b.Fall(by);
 				}
 			}
 		}
