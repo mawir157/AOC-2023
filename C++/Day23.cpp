@@ -232,36 +232,34 @@ namespace Day23
 	{
 		std::vector<int> distances;
 
-		// while (true) {
-			auto it = find(vs.begin(), vs.end(), from);
-			int idx = it - vs.begin(); 
+		auto it = find(vs.begin(), vs.end(), from);
+		int idx = it - vs.begin(); 
 
-			std::vector<std::pair<Pos, int>> nbrs;
-			// nbrs in the adjaceny graph
-			for (size_t i = 0; i < adj[idx].size(); ++i) {
-				if (adj[idx][i] != 0) {
-					// make sure we haven't visited here before
-					if (visited.find(vs[i]) == visited.end()) {
-						nbrs.push_back( { vs[i], adj[idx][i] } );
-					}
+		std::vector<std::pair<Pos, int>> nbrs;
+		// nbrs in the adjaceny graph
+		for (size_t i = 0; i < adj[idx].size(); ++i) {
+			if (adj[idx][i] != 0) {
+				// make sure we haven't visited here before
+				if (visited.find(vs[i]) == visited.end()) {
+					nbrs.push_back( { vs[i], adj[idx][i] } );
 				}
 			}
+		}
 
-			if (nbrs.size() == 0) {
-				return -1e6;
-			}
+		if (nbrs.size() == 0) {
+			return -1e6;
+		}
 
-			for (auto [n, nd] : nbrs) {
-					if (n == to) {
-						return nd;
-					}
-					auto visitedNew = visited;
-					visitedNew.insert(from);
-					const auto d = nd + maxPathThroughGraph(n, to, vs, adj, visitedNew, depth+1);
-					distances.push_back(d);
-			}
-			return *std::max_element(std::begin(distances), std::end(distances));
-		// }
+		for (auto [n, nd] : nbrs) {
+				if (n == to) {
+					return nd;
+				}
+				auto visitedNew = visited;
+				visitedNew.insert(from);
+				const auto d = nd + maxPathThroughGraph(n, to, vs, adj, visitedNew, depth+1);
+				distances.push_back(d);
+		}
+		return *std::max_element(std::begin(distances), std::end(distances));
 
 		return -1e6;
 	}
