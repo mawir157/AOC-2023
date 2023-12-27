@@ -19,7 +19,7 @@ namespace Day24
 		const int64_t aModC = a % c;
 		const int64_t bModC = b % c;
 
-		return (aDivC * bDivC * c) + ((aDivC * bModC + aModC * bDivC)) + ((aModC * bModC) / c);
+		return (aDivC * bDivC * c) + (aDivC * bModC + aModC * bDivC) + ((aModC * bModC) / c);
 	}
 
 	int64_t intersectXY(const HailStone lhs, const HailStone rhs)
@@ -41,7 +41,8 @@ namespace Day24
 			return 0;
 		}
 
-		const int64_t boundLo = 200000000000000, boundHi = 400000000000000;
+		const int64_t boundLo = 7, boundHi = 27;
+		// const int64_t boundLo = 200000000000000, boundHi = 400000000000000;
 
 		const auto tNumX = muldiv(tNum, lhs.dx, disc);
 		const auto tNumY = muldiv(tNum, lhs.dy, disc);
@@ -57,6 +58,70 @@ namespace Day24
 		} else {
 			return 0;
 		}
+
+		return 0;
+	}
+
+	int64_t throwRock(const std::vector<HailStone> hs)
+	{
+		// Step 0 Find three mutually non-interseting paths probably the first
+		std::vector<HailStone> hs_norm;
+		hs_norm.push_back(hs[0]);
+		int start = 1;
+		while(hs_norm.size() < 3) {
+			for (size_t i = start; i < hs.size(); ++i) {
+				bool good = true;
+				for (auto h : hs_norm) {
+					if (intersectXY(hs[i], h) == 1) {
+						good = false;
+						break;
+					}
+				}
+				if (good) {
+					hs_norm.push_back(hs[i]);
+					start = i + 1;
+					break;
+				}
+			}
+		}
+
+		// Step 1 change frame of reference so that [0] is stationary at (0,0,0)
+		for (auto & h : hs_norm) {
+			h.x  -=  hs[0].x;
+			h.y  -=  hs[0].y;
+			h.z  -=  hs[0].z;
+			h.dx -=  hs[0].dx;
+			h.dy -=  hs[0].dy;
+			h.dz -=  hs[0].dz;
+		}
+
+		for (auto h : hs_norm) {
+			printf("(%ld, %ld, %ld, %ld, %ld, %ld)\n", h.x,h.y,h.z,h.dx,h.dy,h.dz);
+		}
+
+		// Step 2 The plane spanned by hs_norm[0] = (0,0,0) = Q and the trajectory
+		// of hs_norm[1] = P + t*dT is given by span {P, proj_v PQ}
+		// PQ = hs_norm[1](0,1,2) - vector from Q-to-P
+		// v  = hs_horm[1](3,4,5)
+		// proj_v PQ = [(v.PQ) / (PQ.PQ)]*v + P
+		int64_t vPQ = 0;
+		vPQ += hs_norm[1].x * hs_norm[1].dx;
+		vPQ += hs_norm[1].y * hs_norm[1].dy;
+		vPQ += hs_norm[1].z * hs_norm[1].dz;
+
+		int64_t PQPQ = 0;
+		PQPQ += hs_norm[1].x * hs_norm[1].x;
+		PQPQ += hs_norm[1].y * hs_norm[1].y;
+		PQPQ += hs_norm[1].z * hs_norm[1].z;
+		
+		std::vector<double> proj = {0,0,0};
+
+		proj[0] = ((double)vPQ / (double)PQPQ) * hs_norm[1].dx + hs_norm[1].x;
+		proj[1] = ((double)vPQ / (double)PQPQ) * hs_norm[1].dy + hs_norm[1].y;
+		proj[2] = ((double)vPQ / (double)PQPQ) * hs_norm[1].dz + hs_norm[1].z;
+
+		printf("(v.PQ) = %ld, (PQ.PQ) = %ld\n", vPQ, PQPQ);
+		printf("(%f, %f, %f)\n", proj[0], proj[1], proj[2]);
 
 		return 0;
 	}
@@ -89,11 +154,13 @@ namespace Day24
 		intersectXY(hs[0], hs[10]);
 
 		int64_t part1 = 0;
-		for (size_t i = 0; i < hs.size(); ++i) {
-			for (size_t j = i + 1; j < hs.size(); ++j) {
-				part1 += intersectXY(hs[i], hs[j]);
-			}
-		}
+		// for (size_t i = 0; i < hs.size(); ++i) {
+		// 	for (size_t j = i + 1; j < hs.size(); ++j) {
+		// 		part1 += intersectXY(hs[i], hs[j]);
+		// 	}
+		// }
+
+		throwRock(hs);
 
 		int64_t part2 = 0;
 		AH::PrintSoln(24, part1, part2);
