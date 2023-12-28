@@ -79,18 +79,16 @@ namespace Day22
 	{
 		int ret = 0;
 		for (size_t index = 0; index < bs.size(); ++index) {
-			int maxFall = 0;
 			for (size_t i = 0; i < bs.size(); ++i) {
 				if (i == index) continue;
-				const auto b = bs[i];
-				maxFall = std::max(maxFall, b.CanFallBy(bs, index));
+				if (bs[i].CanFallBy(bs, index) != 0) {
+					ret++;
+					break;
+				}
 			}
-			if (maxFall > 0) {
-				ret++;
-			} 
 		}
 
-		return ret;
+		return bs.size() - ret;
 	}
 
 	int part2(const std::vector<Block> & bs)
