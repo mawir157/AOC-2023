@@ -24,6 +24,8 @@ namespace Day19
 		std::string fallback;
 	};
 
+	typedef std::vector<std::pair<int, int>> Ranges;
+
 	typedef std::vector<int> Part;
 
 	
@@ -122,6 +124,62 @@ namespace Day19
 		}
 	}
 
+	int64_t rangeSize(const Ranges r)
+	{
+		int64_t ret = 1;
+		for (auto [lo, hi] : r) {
+			ret *= (hi - lo + 1);
+		}
+
+		return ret;
+	}
+
+	int64_t applyWorkToRanges(Ranges rng, const std::map<std::string, Workflow> wfs,
+		const std::string here)
+	{
+		int64_t ret = 0;
+		Workflow wf = wfs.at(here); // we start here
+		for (auto i : wf.ins) {
+			const auto c = i.comp;
+			if (c != '#') { // this is the final instruction, with no conditions
+				if (c == '>') {
+					auto new_rng = rng;
+					auto idx = modeToIndex[i.mode];
+					if (new_rng[idx].second > i.value) {
+						new_rng[idx].first = std::max(new_rng[idx].first, i.value + 1);
+						if (i.out == "A") {
+							ret += rangeSize(new_rng);
+						} else if (i.out != "R") {
+							ret += applyWorkToRanges(new_rng, wfs, i.out);
+						}
+						rng[idx].second = std::min(rng[idx].second, i.value);
+					}
+				}
+				if (c == '<') {
+					auto new_rng = rng;
+					auto idx = modeToIndex[i.mode];
+					if (new_rng[idx].first < i.value) {
+						new_rng[idx].second = std::min(new_rng[idx].second, i.value - 1);
+						if (i.out == "A") {
+							ret += rangeSize(new_rng);
+						} else if (i.out != "R") {
+							ret += applyWorkToRanges(new_rng, wfs, i.out);
+						}
+						rng[idx].first = std::max(rng[idx].first, i.value);
+					}
+				}
+			} else{
+			}
+		}
+		// applied all the legit instruction so finally apply the fallback condition
+		if (wf.fallback == "A") {
+			ret += rangeSize(rng);
+		} else if (wf.fallback != "R") {
+			ret += applyWorkToRanges(rng, wfs, wf.fallback);
+		}
+		return ret;
+	}
+
 	int Run(const std::string& filename)
 	{
 		const std::vector<std::string> ls = AH::ReadTextFile(filename);
@@ -135,6 +193,9 @@ namespace Day19
 		for (auto p : parts) {
 			part1 += applyWorkflows(p, wfs);
 		}
+
+		Ranges rng = { {1,4000}, {1,4000}, {1,4000}, {1,4000} };
+		part2 = applyWorkToRanges(rng, wfs, "in");
 
 		AH::PrintSoln(19, part1, part2);
 
