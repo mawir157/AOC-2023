@@ -35,16 +35,16 @@ func diff(vs []int) []int {
 }
 
 func newton(vs []int) int {
-	all_zero := true
+	all_equal := true
 	for _, v := range vs {
-		if (v != 0) {
-			all_zero = false
+		if (v != vs[0]) {
+			all_equal = false
 			break
 		}
 	}
 
-	if (all_zero) {
-		return 0
+	if (all_equal) {
+		return vs[0]
 	}
 
 	return newton(diff(vs)) + vs[len(vs) - 1]
@@ -58,7 +58,6 @@ func main() {
 		part1 += newton(parseInput(l, false))
 		part2 += newton(parseInput(l, true))
 	}
-
 
 	AH.PrintSoln(9, part1, part2)
 

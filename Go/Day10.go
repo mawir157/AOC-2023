@@ -73,7 +73,6 @@ func pipes(ps []string) (int, [][]int) {
 	ret++
 
 	nbr, _ := moves(cur, ps)
-	// prevprev := start
 	prev := cur
 	cur = nbr
 
@@ -82,14 +81,11 @@ func pipes(ps []string) (int, [][]int) {
 		ret++
 
 		nbrs0, nbrs1 := moves(cur, ps)
-		// temp := prev
-		// prev = cur
 		if (nbrs0 == prev) {
 			cur, prev = nbrs1, cur
 		} else {
 			cur, prev = nbrs0, cur
 		}
-		// prev = cur
 	}
 
 	return ret / 2, bound

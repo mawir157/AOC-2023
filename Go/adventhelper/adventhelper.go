@@ -2,7 +2,7 @@ package adventhelper
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strconv"
 	"strings"
 	"unicode"
@@ -15,15 +15,20 @@ func PrintSoln(day int, soln1 interface{}, soln2 interface{}) {
 	fmt.Println("  Part 1:", soln1)
 	fmt.Println("  Part 2:", soln2)
 }
-////////////////////////////////////////////////////////////////////////////////
+
+// //////////////////////////////////////////////////////////////////////////////
 func ReadStrFile(fname string) (strs []string, err error) {
-	b, err := ioutil.ReadFile(fname)
-	if err != nil { return nil, err }
+	b, err := os.ReadFile(fname)
+	if err != nil {
+		return nil, err
+	}
 
 	lines := strings.Split(string(b), "\n")
 	for _, l := range lines {
 		// Empty line occurs at the end of the file when we use Split.
-		if len(l) == 0 { continue }
+		if len(l) == 0 {
+			continue
+		}
 		strs = append(strs, l)
 	}
 
@@ -32,8 +37,10 @@ func ReadStrFile(fname string) (strs []string, err error) {
 
 // Read a file to an array of integers.
 func ReadIntFile(fname string) (nums []int, err error) {
-	b, err := ioutil.ReadFile(fname)
-	if err != nil { return nil, err }
+	b, err := os.ReadFile(fname)
+	if err != nil {
+		return nil, err
+	}
 
 	lines := strings.Split(string(b), "\n")
 	// Assign cap to avoid resize on every append.
@@ -41,11 +48,15 @@ func ReadIntFile(fname string) (nums []int, err error) {
 
 	for _, l := range lines {
 		// Empty line occurs at the end of the file when we use Split.
-		if len(l) == 0 { continue }
+		if len(l) == 0 {
+			continue
+		}
 		// Atoi better suits the job when we know exactly what we're dealing
 		// with. Scanf is the more general option.
 		n, err := strconv.Atoi(l)
-		if err != nil { return nil, err }
+		if err != nil {
+			return nil, err
+		}
 		nums = append(nums, n)
 	}
 
@@ -54,8 +65,10 @@ func ReadIntFile(fname string) (nums []int, err error) {
 
 // combine groups of lines separate by empty lines
 func ParseLineGroups(fname string, sep string) (strs []string, err error) {
-	b, err := ioutil.ReadFile(fname)
-	if err != nil { return nil, err }
+	b, err := os.ReadFile(fname)
+	if err != nil {
+		return nil, err
+	}
 
 	lines := strings.Split(string(b), "\n")
 	temp := ""
@@ -67,13 +80,14 @@ func ParseLineGroups(fname string, sep string) (strs []string, err error) {
 				temp = temp + sep + l
 			}
 		} else {
-			strs = append(strs,temp)
+			strs = append(strs, temp)
 			temp = ""
 		}
 	}
 	return strs, nil
 }
-////////////////////////////////////////////////////////////////////////////////
+
+// //////////////////////////////////////////////////////////////////////////////
 // a^b
 func PowInt(a int, b int) (n int) {
 	n = 1
@@ -132,6 +146,25 @@ func MaxAndMin(arr []int) (max int, min int) {
 	return
 }
 
+// returns the index of the maximum and minimum of an array of ints
+func MaxAndMinIdx(arr []int) (maxIdx int, minIdx int) {
+	max, min := arr[0], arr[0]
+	maxIdx, minIdx = 0, 0
+
+	for idx, i := range arr {
+		if i > max {
+			max = i
+			maxIdx = idx
+		}
+
+		if i < min {
+			min = i
+			minIdx = idx
+		}
+	}
+	return
+}
+
 // returns the maximum of two ints
 func MaxPair(x1 int, x2 int) int {
 	if x1 > x2 {
@@ -140,61 +173,73 @@ func MaxPair(x1 int, x2 int) int {
 	return x2
 }
 
+// returns the minimum of two ints
+func MinPair(x1 int, x2 int) int {
+	if x1 < x2 {
+		return x1
+	}
+	return x2
+}
+
 // Head
 func FirstRune(str string) (r rune) {
-  for _, r = range str {
-      return
-  }
-  return
+	for _, r = range str {
+		return
+	}
+	return
 }
 
 // Last
 func FinalRune(str string) (r rune) {
-  for _, r = range str {
-  }
-  return
+	for _, r = range str {
+	}
+	return
 }
 
 // RuneAr
 func RuneAt(str string, n int) (r rune) {
 	i := 0
-  for i, r = range str {
-  	if i == n {
-  		return
-  	}
-  }
-  return
+	for i, r = range str {
+		if i == n {
+			return
+		}
+	}
+	return
+}
+
+func SetRuneAt(s string, r rune, n int) string {
+	return s[:n] + string(r) + s[n:]
 }
 
 // Tail
 func TrimFirstRune(s string) string {
 	rs := []rune(s)
-  return string(rs[1:])
+	return string(rs[1:])
 }
 
 // Init
 func TrimLastRune(s string) string {
 	l := len(s)
 	rs := []rune(s)
-  return string(rs[:(l-1)])
+	return string(rs[:(l - 1)])
 }
 
 // Drop
 func Drop(s string, n int) string {
 	rs := []rune(s)
-  return string(rs[n:])
+	return string(rs[n:])
 }
 
 // Take
 func Take(s string, n int) string {
 	rs := []rune(s)
-  return string(rs[:n])
+	return string(rs[:n])
 }
 
 func TakeWhileDigit(s string) string {
 	rs := []rune{}
 	for _, c := range s {
-		if (unicode.IsDigit(c)) {
+		if unicode.IsDigit(c) {
 			rs = append(rs, c)
 		} else {
 			break
@@ -209,7 +254,7 @@ func ReverseString(s string) string {
 	n := len(s)
 	runes := make([]rune, n)
 	for _, rune := range s {
-	 	n--
+		n--
 		runes[n] = rune
 	}
 	return string(runes[n:])
@@ -217,18 +262,18 @@ func ReverseString(s string) string {
 
 // Not defined in math!
 func AbsInt(i int) int {
-	if (i < 0) {
-		return - i
+	if i < 0 {
+		return -i
 	}
 	return i
 }
 
 // Not defined in math!
 func Sign(i int) int {
-	if (i == 0) {
+	if i == 0 {
 		return 0
-	} else if (i < 0) {
-		return - 1
+	} else if i < 0 {
+		return -1
 	}
 	return 1
 }
@@ -263,15 +308,15 @@ func Concat(arr1, arr2 []int) (out []int) {
 }
 
 func Min(a, b int) int {
-    if a < b {
-        return a
-    }
-    return b
+	if a < b {
+		return a
+	}
+	return b
 }
 
 func Max(a, b int) int {
-    if a > b {
-        return a
-    }
-    return b
+	if a > b {
+		return a
+	}
+	return b
 }
