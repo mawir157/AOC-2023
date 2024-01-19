@@ -1,11 +1,11 @@
 package main
 
-import AH "./adventhelper"
-
 import (
 	"math"
 	"strconv"
 	"strings"
+
+	AH "./adventhelper"
 )
 
 type Mapping struct {
@@ -54,7 +54,7 @@ func parseMapping(s string) []Mapping {
 		r, _ := strconv.Atoi(p[0])
 		s, _ := strconv.Atoi(p[1])
 		t, _ := strconv.Atoi(p[2])
-		ms = append(ms, Mapping{r,s,t})
+		ms = append(ms, Mapping{r, s, t})
 	}
 
 	return ms
@@ -65,22 +65,22 @@ func applyMappingToRanges(rs []Range, ms []Mapping) []Range {
 	next := []Range{}
 
 	for _, m := range ms {
-		for ; 0 < len(rs); {
+		for 0 < len(rs) {
 			r := rs[0]
 			rs = rs[1:]
 			if (r.s >= (m.s + m.t)) || (m.s >= (r.s + r.w)) {
 				next = append(next, r)
 			} else {
 				overlap_s := AH.Max(r.s, m.s)
-				overlap_e := AH.Min(r.s + r.w, m.s + m.t)
+				overlap_e := AH.Min(r.s+r.w, m.s+m.t)
 
-				if (overlap_s > r.s) {
+				if overlap_s > r.s {
 					next = append(next, Range{r.s, overlap_s - r.s})
 				}
 
 				post = append(post, Range{overlap_s + m.r - m.s, overlap_e - overlap_s})
 
-				if (overlap_e < r.s + r.w) {
+				if overlap_e < r.s+r.w {
 					next = append(next, Range{overlap_e, r.s + r.w - overlap_e})
 				}
 			}
@@ -119,7 +119,7 @@ func main() {
 		for _, ms := range mss {
 			s = applyMappingToInt(s, ms)
 		}
-		if (part1 > s) {
+		if part1 > s {
 			part1 = s
 		}
 	}

@@ -1,17 +1,17 @@
 package main
 
-import AH "./adventhelper"
-
 import (
 	"strconv"
 	"strings"
+
+	AH "./adventhelper"
 )
 
 func parseLine(game string) ([]int, []int) {
 	winning := []int{}
 	scratchcard := []int{}
 	parts := strings.Split(game, ":")
-	s:= strings.Split(parts[1], "|")
+	s := strings.Split(parts[1], "|")
 
 	wins := strings.Split(s[0], " ")
 	for _, win := range wins {
@@ -50,7 +50,7 @@ func main() {
 
 	part1, part2 := 0, 0
 	copies := make([]int, len(inputLines))
-	for i, _ := range copies {
+	for i := range copies {
 		copies[i] = 1
 	}
 	for i, l := range inputLines {
@@ -61,7 +61,7 @@ func main() {
 
 			for j := 0; j < score; j++ {
 				if (i + j + 1) < len(copies) {
-					copies[i + j + 1] += copies[i]
+					copies[i+j+1] += copies[i]
 				}
 			}
 		}

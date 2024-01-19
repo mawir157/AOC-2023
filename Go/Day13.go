@@ -1,37 +1,37 @@
 package main
 
-import AH "./adventhelper"
-
 import (
 	"strings"
+
+	AH "./adventhelper"
 )
 
 func colRef(row string) map[int]bool {
 	idxs := make(map[int]bool)
 
-	for r := 0; r < len(row) - 1; r++ {
+	for r := 0; r < len(row)-1; r++ {
 		good := true
 		for i := 0; i <= r; i++ {
 			if ((r - i) < 0) || ((r + i + 1) >= len(row)) {
 				break
 			}
 
-			if row[r - i] != row[r + i + 1] {
+			if row[r-i] != row[r+i+1] {
 				good = false
 				break
-			} 
+			}
 		}
 
 		if !good {
 			idxs[r+1] = true
 		}
- 	}
+	}
 
- 	return idxs
+	return idxs
 }
 
 func rowRef(rs []string, skip int) int {
-	for r := 0; r < len(rs) - 1; r++ {
+	for r := 0; r < len(rs)-1; r++ {
 		if (r + 1) == skip {
 			continue
 		}
@@ -43,7 +43,7 @@ func rowRef(rs []string, skip int) int {
 				break
 			}
 
-			if rs[r - i] != rs[r + i + 1] {
+			if rs[r-i] != rs[r+i+1] {
 				good = false
 				break
 			}
@@ -60,7 +60,7 @@ func rowRef(rs []string, skip int) int {
 func findRefLines(grid string, skip int) int {
 	gd := strings.Split(grid, "|")
 
-	row := rowRef(gd, skip / 100)
+	row := rowRef(gd, skip/100)
 	if row > 0 {
 		return 100 * row
 	}
@@ -69,19 +69,19 @@ func findRefLines(grid string, skip int) int {
 	for i := 1; i < len(gd[0]); i++ {
 		cols[i] = true
 	}
-	if (skip > 0) {
-		 delete(cols, skip % 100);
+	if skip > 0 {
+		delete(cols, skip%100)
 	}
 
 	for _, r := range gd {
 		colRefs := colRef(r)
-		for c, _ := range colRefs {
+		for c := range colRefs {
 			delete(cols, c)
 		}
 	}
 
 	if len(cols) > 0 {
-		for k, _ := range cols {
+		for k := range cols {
 			return k
 		}
 	}
@@ -96,7 +96,7 @@ func findAfterSmudge(grid string, bad int) int {
 			continue
 		}
 		copyGrid := ""
-		if (c == '.') {
+		if c == '.' {
 			copyGrid = grid[:i] + "#" + grid[(i+1):]
 		} else {
 			copyGrid = grid[:i] + "." + grid[(i+1):]
@@ -104,7 +104,7 @@ func findAfterSmudge(grid string, bad int) int {
 
 		t := findRefLines(copyGrid, bad)
 
-		if (t > 0) {
+		if t > 0 {
 			return t
 		}
 	}

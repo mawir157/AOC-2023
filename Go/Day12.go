@@ -1,10 +1,10 @@
 package main
 
-import AH "./adventhelper"
-
 import (
 	"strconv"
 	"strings"
+
+	AH "./adventhelper"
 )
 
 func numberOfSolns(pattern string, is []int, cache map[int]int) int {
@@ -24,9 +24,9 @@ func numberOfSolns(pattern string, is []int, cache map[int]int) int {
 		return 0
 	}
 
-	hash := len(pattern) * 100 + len(is)
+	hash := len(pattern)*100 + len(is)
 	if v, ok := cache[hash]; ok {
-    return v
+		return v
 	}
 
 	toFit := is[0]
@@ -36,19 +36,19 @@ func numberOfSolns(pattern string, is []int, cache map[int]int) int {
 	}
 
 	waysToPack := 0
-	for i := from; i < len(pattern) - toFit + 1; i++ {
+	for i := from; i < len(pattern)-toFit+1; i++ {
 		t := strings.Index(pattern[i:], ".")
 		if (t >= 0) && (t < toFit) {
 			continue
 		}
 
-		t =	strings.Index(pattern, "#")
+		t = strings.Index(pattern, "#")
 		if (t >= 0) && (t < i) {
 			break
 		}
 
-		if (i + toFit < len(pattern)) {
-			if (pattern[i + toFit ] == '#') {
+		if i+toFit < len(pattern) {
+			if pattern[i+toFit] == '#' {
 				continue
 			}
 		}
@@ -56,7 +56,7 @@ func numberOfSolns(pattern string, is []int, cache map[int]int) int {
 		next_idx := i + toFit + 1
 		if next_idx > len(pattern) {
 			next_idx = len(pattern)
-		} 
+		}
 		waysToPack += numberOfSolns(pattern[next_idx:], is[1:], cache)
 	}
 

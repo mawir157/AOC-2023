@@ -6,9 +6,9 @@ func race(time int, dist int) int {
 	lo := 0
 	hi := time / 2
 
-	for ; hi - lo > 1 ; {
+	for hi-lo > 1 {
 		nxt := (hi + lo) / 2
-		if nxt * (time - nxt) > dist {
+		if nxt*(time-nxt) > dist {
 			hi = nxt
 		} else {
 			lo = nxt

@@ -1,9 +1,9 @@
 package main
 
-import AH "./adventhelper"
-
 import (
 	"strings"
+
+	AH "./adventhelper"
 )
 
 type Pair struct {
@@ -60,13 +60,11 @@ func runUntilMatch(src string, tgt string, ins []int, rs map[string]Pair, part2 
 			}
 		}
 	}
-
-	return 0
 }
 
 func findNodesEndingIn(rs map[string]Pair, r rune) []string {
 	goodNodes := []string{}
-	for k, _ := range rs {
+	for k := range rs {
 		if AH.FinalRune(k) == r {
 			goodNodes = append(goodNodes, k)
 		}
@@ -75,34 +73,18 @@ func findNodesEndingIn(rs map[string]Pair, r rune) []string {
 	return goodNodes
 }
 
-func gcd(a int, b int) int {
-	if (b == 0) {
-		return a
-	}
-
-	return gcd(b, a % b)
-}
-
-func lcm(a int, b int) int {
-	if (a > b) {
-		return (a / gcd(a, b)) * b
-	} else {
-		return (b / gcd(b, a)) * a
-	}
-}
-
 func main() {
 	inputLines, _ := AH.ReadStrFile("../input/input08.txt")
 	ins := parseInstruction(inputLines[0])
-	rs  := parseRules(inputLines[1:])
+	rs := parseRules(inputLines[1:])
 
 	part1 := runUntilMatch("AAA", "ZZZ", ins, rs, false)
 
 	part2 := 1
 	gns := findNodesEndingIn(rs, 'A')
 
-	for _, n := range  gns {
-		part2 = lcm(part2, runUntilMatch(n, "ZZZ", ins, rs, true))
+	for _, n := range gns {
+		part2 = AH.LCM(part2, runUntilMatch(n, "ZZZ", ins, rs, true))
 	}
 
 	AH.PrintSoln(8, part1, part2)

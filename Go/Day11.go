@@ -1,8 +1,7 @@
 package main
 
-import AH "./adventhelper"
-
 import (
+	AH "./adventhelper"
 )
 
 type Pos struct {
@@ -47,12 +46,12 @@ func parseInput(ss []string, ex int) (ret int) {
 
 	for i := 0; i < len(ps); i++ {
 		for j := i + 1; j < len(ps); j++ {
-			ret += AH.AbsInt(ps[i].r - ps[j].r) + AH.AbsInt(ps[i].c - ps[j].c)
+			ret += AH.AbsInt(ps[i].r-ps[j].r) + AH.AbsInt(ps[i].c-ps[j].c)
 		}
 	}
 
 	return
-} 
+}
 
 func main() {
 	ls, _ := AH.ReadStrFile("../input/input11.txt")

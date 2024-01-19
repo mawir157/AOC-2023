@@ -1,14 +1,14 @@
 package main
 
-import AH "./adventhelper"
-
 import (
 	"strconv"
 	"strings"
+
+	AH "./adventhelper"
 )
 
 func maxPerColour(s string) (count map[rune]int) {
-	count = map[rune]int{ 'r': 0, 'g': 0, 'b': 0 }
+	count = map[rune]int{'r': 0, 'g': 0, 'b': 0}
 
 	parts := strings.Split(s, ":")
 	ss := strings.Split(parts[1], ";")
@@ -49,12 +49,12 @@ func main() {
 	inputLines, _ := AH.ReadStrFile("../input/input02.txt")
 
 	part1, part2 := 0, 0
-	target := map[rune]int{ 'r': 12, 'g': 13, 'b': 14 }
+	target := map[rune]int{'r': 12, 'g': 13, 'b': 14}
 
 	for i, l := range inputLines {
 		b, p := validateGame(l, target)
 		if b {
-			part1 += (i+1);
+			part1 += (i + 1)
 		}
 		part2 += p
 	}

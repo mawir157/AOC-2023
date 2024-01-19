@@ -1,8 +1,7 @@
 package main
 
-import AH "./adventhelper"
-
 import (
+	AH "./adventhelper"
 )
 
 type Pos struct {
@@ -12,35 +11,35 @@ type Pos struct {
 func moves(p Pos, ps []string) (Pos, Pos) {
 	c := AH.RuneAt(ps[p.r], p.c)
 
-	if (c == 'F') {
+	if c == 'F' {
 		return Pos{p.r + 1, p.c}, Pos{p.r, p.c + 1}
-	} else if (c == 'L') {
+	} else if c == 'L' {
 		return Pos{p.r - 1, p.c}, Pos{p.r, p.c + 1}
-	} else if (c == '7') {
+	} else if c == '7' {
 		return Pos{p.r + 1, p.c}, Pos{p.r, p.c - 1}
-	} else if (c == 'J') {
+	} else if c == 'J' {
 		return Pos{p.r - 1, p.c}, Pos{p.r, p.c - 1}
-	} else if (c == '|') {
+	} else if c == '|' {
 		return Pos{p.r - 1, p.c}, Pos{p.r + 1, p.c}
-	} else if (c == '-') {
+	} else if c == '-' {
 		return Pos{p.r, p.c - 1}, Pos{p.r, p.c + 1}
-	} else if (c == '.') {
+	} else if c == '.' {
 		return Pos{0, 0}, Pos{0, 0}
 	}
 
 	// c == 'S'
 	sNbrs := []Pos{}
 	above, left, down, right := "F7|", "FL-", "JL|", "J7-"
-	if AH.ContainsChar(above, AH.RuneAt(ps[p.r - 1], p.c)) {
+	if AH.ContainsChar(above, AH.RuneAt(ps[p.r-1], p.c)) {
 		sNbrs = append(sNbrs, Pos{p.r - 1, p.c})
 	}
-	if AH.ContainsChar(left, AH.RuneAt(ps[p.r], p.c - 1)) {
+	if AH.ContainsChar(left, AH.RuneAt(ps[p.r], p.c-1)) {
 		sNbrs = append(sNbrs, Pos{p.r, p.c - 1})
 	}
-	if AH.ContainsChar(down, AH.RuneAt(ps[p.r + 1], p.c)) {
+	if AH.ContainsChar(down, AH.RuneAt(ps[p.r+1], p.c)) {
 		sNbrs = append(sNbrs, Pos{p.r + 1, p.c})
 	}
-	if AH.ContainsChar(right, AH.RuneAt(ps[p.r], p.c + 1)) {
+	if AH.ContainsChar(right, AH.RuneAt(ps[p.r], p.c+1)) {
 		sNbrs = append(sNbrs, Pos{p.r, p.c + 1})
 	}
 
@@ -50,7 +49,7 @@ func moves(p Pos, ps []string) (Pos, Pos) {
 func findStart(ps []string) Pos {
 	for ir, s := range ps {
 		for ic, c := range s {
-			if c == 'S'{
+			if c == 'S' {
 				return Pos{ir, ic}
 			}
 		}
@@ -60,7 +59,7 @@ func findStart(ps []string) Pos {
 }
 
 func pipes(ps []string) (int, [][]int) {
-	
+
 	bound := make([][]int, len(ps))
 	for i := range bound {
 		bound[i] = make([]int, len(ps[0]))
@@ -76,12 +75,12 @@ func pipes(ps []string) (int, [][]int) {
 	prev := cur
 	cur = nbr
 
-	for ; cur != start; {
+	for cur != start {
 		bound[cur.r][cur.c] = 1
 		ret++
 
 		nbrs0, nbrs1 := moves(cur, ps)
-		if (nbrs0 == prev) {
+		if nbrs0 == prev {
 			cur, prev = nbrs1, cur
 		} else {
 			cur, prev = nbrs0, cur
@@ -97,19 +96,19 @@ func jct(grid []string, bound [][]int) int {
 		bd_count := 0
 		r := 'X'
 		for ic, t := range s {
-			if (bound[ir][ic] != 0) {
-				if ( (t == '|') ||
-				     ((t == 'J') && (r == 'F')) ||
-				     ((t == '7') && (r == 'L')) ) {
-					bd_count++;
-				}	
-				
-				if ((t == 'F') || (t == 'L')) {
-					r = t;
-				}			
+			if bound[ir][ic] != 0 {
+				if (t == '|') ||
+					((t == 'J') && (r == 'F')) ||
+					((t == '7') && (r == 'L')) {
+					bd_count++
+				}
+
+				if (t == 'F') || (t == 'L') {
+					r = t
+				}
 			} else {
-				if ((bd_count % 2) == 1) {
-					ret++;
+				if (bd_count % 2) == 1 {
+					ret++
 				}
 			}
 		}

@@ -1,10 +1,10 @@
 package main
 
-import AH "./adventhelper"
-
 import (
 	"strconv"
 	"unicode"
+
+	AH "./adventhelper"
 )
 
 func fn(ss []string) (part1 int, part2 int) {
@@ -20,27 +20,27 @@ func fn(ss []string) (part1 int, part2 int) {
 			if len(digits) > 0 { // we have a number
 				hasNbr := false
 				gearIdx := 0
-				for ir := AH.Max(0, r - 1); ir < AH.Min(len(ss), r + 2); ir++ {
-					for ic := AH.Max(0, c - 1); ic < AH.Min(len(s), c + n + 1); ic++ {
+				for ir := AH.Max(0, r-1); ir < AH.Min(len(ss), r+2); ir++ {
+					for ic := AH.Max(0, c-1); ic < AH.Min(len(s), c+n+1); ic++ {
 						qs := ss[ir]
 						qc := AH.RuneAt(qs, ic)
-						if ((qc != '.') && (!unicode.IsDigit(qc))) {
+						if (qc != '.') && (!unicode.IsDigit(qc)) {
 							hasNbr = true
-							if (qc == '*') {
-								gearIdx = ir * len(s) + ic
+							if qc == '*' {
+								gearIdx = ir*len(s) + ic
 							}
 							break
 						}
 					}
-					if (hasNbr) {
+					if hasNbr {
 						break
 					}
 				}
 
-				if (hasNbr) {
+				if hasNbr {
 					v, _ := strconv.Atoi(digits)
 					part1 += v
-					if (gearIdx != 0) {
+					if gearIdx != 0 {
 						_, ok := gears[gearIdx]
 						if ok {
 							part2 += gears[gearIdx] * v

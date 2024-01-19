@@ -1,11 +1,11 @@
 package main
 
-import AH "./adventhelper"
-
 import (
 	"slices"
 	"strconv"
 	"strings"
+
+	AH "./adventhelper"
 )
 
 func parseInput(s string, b bool) []int {
@@ -17,7 +17,7 @@ func parseInput(s string, b bool) []int {
 		vs = append(vs, v)
 	}
 
-	if (b) {
+	if b {
 		slices.Reverse(vs)
 	}
 
@@ -28,7 +28,7 @@ func diff(vs []int) []int {
 	df := []int{}
 
 	for i := 0; i < (len(vs) - 1); i++ {
-		df = append(df, vs[i+1] - vs[i])
+		df = append(df, vs[i+1]-vs[i])
 	}
 
 	return df
@@ -37,17 +37,17 @@ func diff(vs []int) []int {
 func newton(vs []int) int {
 	all_equal := true
 	for _, v := range vs {
-		if (v != vs[0]) {
+		if v != vs[0] {
 			all_equal = false
 			break
 		}
 	}
 
-	if (all_equal) {
+	if all_equal {
 		return vs[0]
 	}
 
-	return newton(diff(vs)) + vs[len(vs) - 1]
+	return newton(diff(vs)) + vs[len(vs)-1]
 }
 
 func main() {

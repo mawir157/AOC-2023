@@ -1,19 +1,19 @@
 package main
 
-import AH "./adventhelper"
-
 import (
 	"sort"
 	"strconv"
 	"strings"
+
+	AH "./adventhelper"
 )
 
-var CARDS  = "AKQJT98765432"
+var CARDS = "AKQJT98765432"
 var CARDSJ = "AKQT98765432J"
 
 type Hand struct {
 	cards string
-	bet int
+	bet   int
 }
 
 func parseInput(s string) Hand {
@@ -70,7 +70,7 @@ func handRank(hand string) int {
 func handRankWithJokers(hand string) int {
 	best := 0
 	for _, c := range CARDS {
-		if (c == 'J') {
+		if c == 'J' {
 			continue
 		}
 		hand_copy := strings.Replace(hand, "J", string(c), 5)
@@ -107,7 +107,7 @@ func handLT(lhs string, rhs string, part2 bool) bool {
 			r = strings.Index(CARDSJ, string(rhs[i]))
 		}
 
-		if (l != r) {
+		if l != r {
 			return l > r
 		}
 	}
