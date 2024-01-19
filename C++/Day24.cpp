@@ -119,7 +119,6 @@ namespace Day24
 		// Normalise P so that it is not insane
 		int64_t scale = std::gcd(hs_norm[1].x, hs_norm[1].y);
 		scale = std::gcd(scale, hs_norm[1].z);
-		printf("scale  = %lld\n", scale);
 
 		hs_norm[1].x /= scale;
 		hs_norm[1].y /= scale;
@@ -191,10 +190,7 @@ namespace Day24
 		rock.z -= shiftBy *pp[2];
 
 		// sum the values in the original frame of reference
-		int64_t soln = 0;
-		soln += rock.x + hs[0].x;
-		soln += rock.y + hs[0].y;
-		soln += rock.z + hs[0].z;
+		int64_t soln = rock.x + hs[0].x + rock.y + hs[0].y + rock.z + hs[0].z;
 
 		return soln;
 	}
@@ -223,8 +219,6 @@ namespace Day24
 		for (auto l : ls) {
 			hs.push_back(parseInput(l));
 		}
-
-		intersectXY(hs[0], hs[10]);
 
 		int64_t part1 = 0;
 		for (size_t i = 0; i < hs.size(); ++i) {

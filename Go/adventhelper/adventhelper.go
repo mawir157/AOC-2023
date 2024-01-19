@@ -165,22 +165,6 @@ func MaxAndMinIdx(arr []int) (maxIdx int, minIdx int) {
 	return
 }
 
-// returns the maximum of two ints
-func MaxPair(x1 int, x2 int) int {
-	if x1 > x2 {
-		return x1
-	}
-	return x2
-}
-
-// returns the minimum of two ints
-func MinPair(x1 int, x2 int) int {
-	if x1 < x2 {
-		return x1
-	}
-	return x2
-}
-
 // Head
 func FirstRune(str string) (r rune) {
 	for _, r = range str {
@@ -319,4 +303,32 @@ func Max(a, b int) int {
 		return a
 	}
 	return b
+}
+
+func MulDiv(a, b, c int) int {
+	aDivC := a / c
+	bDivC := b / c
+	aModC := a % c
+	bModC := b % c
+
+	return (aDivC * bDivC * c) + (aDivC*bModC + aModC*bDivC) + ((aModC * bModC) / c)
+}
+
+func GCD(a, b int) int {
+	for b != 0 {
+		t := b
+		b = a % b
+		a = t
+	}
+	return a
+}
+
+func LCM(a, b int, integers ...int) int {
+	result := a * b / GCD(a, b)
+
+	for i := 0; i < len(integers); i++ {
+		result = LCM(result, integers[i])
+	}
+
+	return result
 }
