@@ -8,15 +8,15 @@ namespace Day22
 		int ylo, yhi;
 		int zlo, zhi;
 		bool hasFallen;
+		size_t idx;
 
-		Block() : xlo(0), xhi(0), ylo(0), yhi(0), zlo(0), zhi(0), hasFallen(false) {}
+		Block() : xlo(0), xhi(0), ylo(0), yhi(0), zlo(0), zhi(0), hasFallen(false), idx(0) {}
 		Block(const int xlo, const int xhi,
 			    const int ylo, const int yhi,
-			    const int zlo, const int zhi) :
-			xlo(xlo), xhi(xhi), ylo(ylo), yhi(yhi), zlo(zlo), zhi(zhi), hasFallen(false) {}
+			    const int zlo, const int zhi,
+				const int index) :
+			xlo(xlo), xhi(xhi), ylo(ylo), yhi(yhi), zlo(zlo), zhi(zhi), hasFallen(false), idx(index) {}
 
-		bool Contains(const int x, const int y, const int z) const;
-		bool CanFall(const std::vector<Block> & bs, size_t skip) const;
 		int CanFallBy(const std::vector<Block> & bs, size_t skip) const;
 		void Fall(const int by, const bool part2=false) { 
 			zlo -= by;
@@ -24,13 +24,6 @@ namespace Day22
 			if (part2) {
 				hasFallen = true;
 			}
-		}
-
-		friend bool operator==(const Block& l, const Block& r)
-		{
-			return ( (l.xlo == r.xlo) && (l.xhi == r.xhi) &&
-				       (l.ylo == r.ylo) && (l.yhi == r.yhi) &&
-				       (l.zlo == r.zlo) && (l.zhi == r.zhi) );
 		}
 	};
 
@@ -43,11 +36,10 @@ namespace Day22
 
 		int fallBy = base - 1; // the furthest we can fall
 		for (size_t i = 0; i < bs.size(); ++i) {
-			if (i == skip) continue;
-			const auto b = bs[i];
-			if (*this == b) {
+			if ( (i == skip) || (i == idx) ) {
 				continue;
 			}
+			const auto b = bs[i];
 
 			// do the x-y shadows overlap?
 			if ( (b.xlo <= xhi) && (xlo <= b.xhi) &&
@@ -62,7 +54,7 @@ namespace Day22
 		return fallBy;
 	}
 
-	Block parseInput(const std::string s)
+	Block parseInput(const std::string s, const int index)
 	{
 		const auto ll = AH::SplitOnString(s, "~");
 		const auto lows = AH::SplitOnString(ll[0], ",");
@@ -70,7 +62,8 @@ namespace Day22
 
 		Block b(stoi(lows[0]), stoi(highs[0]),
 			      stoi(lows[1]), stoi(highs[1]),
-			      stoi(lows[2]), stoi(highs[2]));
+			      stoi(lows[2]), stoi(highs[2]),
+				  index);
 
 		return b;
 	}
@@ -80,7 +73,9 @@ namespace Day22
 		int ret = 0;
 		for (size_t index = 0; index < bs.size(); ++index) {
 			for (size_t i = 0; i < bs.size(); ++i) {
-				if (i == index) continue;
+				if (i == index) {
+					continue;
+				}
 				if (bs[i].CanFallBy(bs, index) != 0) {
 					ret++;
 					break;
@@ -100,7 +95,9 @@ namespace Day22
 			while(falling) {
 				falling = false;
 				for (size_t i = 0; i < bss.size(); ++i) {
-					if (i == index) continue;
+					if (i == index) {
+						continue;
+					}
 					auto & b = bss[i];
 
 					const int by = b.CanFallBy(bss, index);
@@ -111,9 +108,7 @@ namespace Day22
 				}
 			}
 
-			for (size_t i = 0; i < bss.size(); ++i) {
-				if (i == index) continue;
-			 	const auto b = bss[i];
+			for (auto b : bss) {
 				if (b.hasFallen) {
 					ret++;
 				}
@@ -127,8 +122,10 @@ namespace Day22
 	{
 		const auto ls = AH::ReadTextFile(filename);
 		std::vector<Block> bs;
+		size_t index = 0;
 		for (auto l : ls) {
-			bs.push_back(parseInput(l));
+			bs.push_back(parseInput(l, index));
+			++index;
 		}
 
 		bool falling = true;
@@ -142,10 +139,8 @@ namespace Day22
 				}
 			}
 		}
-		const auto p1 = part1(bs);
-		const auto p2 = part2(bs);
 
-		AH::PrintSoln(22, p1, p2);
+		AH::PrintSoln(22, part1(bs), part2(bs));
 
 		return 0;
 	}
