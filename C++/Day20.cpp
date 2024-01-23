@@ -13,11 +13,10 @@ namespace Day20
 
 		GraphNode(const std::string name, const Mode mode) : 
 		  name(name), mode(mode), onOf(false), inputs({}) {}
-		GraphNode() : name("0"), mode(Mode::Source), onOf(false), inputs({}) {}
+		GraphNode() : name("0"), mode(Source), onOf(false), inputs({}) {}
 
 		bool allHigh() const;
 		bool anyHigh() const;
-		void PrintNode() const;
 		
 	};
 
@@ -44,7 +43,6 @@ namespace Day20
 		std::vector<std::vector<int>> adj;
 		std::vector<GraphNode> gns;
 
-		void PrintState() const;
 		GraphNode getNode(const std::string name) const;
 	};
 
