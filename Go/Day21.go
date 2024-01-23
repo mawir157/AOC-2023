@@ -8,8 +8,9 @@ type Pos struct {
 	r, c int
 }
 
-func parseInput(ss []string, p *Pos) [][]int {
+func parseInput(ss []string) ([][]int, Pos) {
 	grid := [][]int{}
+	p := Pos{0, 0}
 
 	for r, s := range ss {
 		row := []int{}
@@ -27,7 +28,7 @@ func parseInput(ss []string, p *Pos) [][]int {
 		grid = append(grid, row)
 	}
 
-	return grid
+	return grid, p
 }
 
 func nbrs(p Pos, rlim, clim int) []Pos {
@@ -105,8 +106,7 @@ func getMagicNumbers(grid [][]int, cur map[Pos]bool) [4]int {
 
 func main() {
 	inputLines, _ := AH.ReadStrFile("../input/input21.txt")
-	start := Pos{0, 0}
-	grid := parseInput(inputLines, &start)
+	grid, start := parseInput(inputLines)
 	cur := make(map[Pos]bool)
 	cur[start] = true
 
