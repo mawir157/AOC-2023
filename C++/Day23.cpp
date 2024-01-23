@@ -228,7 +228,7 @@ namespace Day23
 
 	int maxPathThroughGraph(const Pos from, const Pos to,
 		const std::vector<Pos> vs, const std::vector<std::vector<int>> adj,
-		const std::set<Pos> visited, int depth=0)
+		const std::set<Pos> visited)
 	{
 		std::vector<int> distances;
 
@@ -256,12 +256,10 @@ namespace Day23
 				}
 				auto visitedNew = visited;
 				visitedNew.insert(from);
-				const auto d = nd + maxPathThroughGraph(n, to, vs, adj, visitedNew, depth+1);
+				const auto d = nd + maxPathThroughGraph(n, to, vs, adj, visitedNew);
 				distances.push_back(d);
 		}
 		return *std::max_element(std::begin(distances), std::end(distances));
-
-		return -1e6;
 	}
 
 	int Run(const std::string& filename)
