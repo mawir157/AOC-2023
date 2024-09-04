@@ -168,7 +168,6 @@ namespace Day19
 						rng[idx].first = std::max(rng[idx].first, i.value);
 					}
 				}
-			} else{
 			}
 		}
 		// applied all the legit instruction so finally apply the fallback condition

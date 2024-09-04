@@ -15,14 +15,12 @@ namespace Day25
 			const auto name = l.substr(0, 3);
 			if (nameToIndex.count(name) == 0) {
 				nameToIndex[name] = i;
-				// g.indexToName[i] = name;
 			}
 			const auto to = AH::SplitOnString(l.substr(5), " ");
 			for (auto t : to) {
 				i = nameToIndex.size();
 				if (nameToIndex.count(t) == 0) {
 					nameToIndex[t] = i;
-					// g.indexToName[i] = t;
 				}
 			}
 		}
@@ -61,12 +59,18 @@ namespace Day25
 			for (int it = 0; it < n - ph; it++) { // O(V^2) -> O(E log V) with prio. queue
 				w[t] = INT_MIN;
 				s = t, t = max_element(w.begin(), w.end()) - w.begin();
-				for (int i = 0; i < n; i++) w[i] += mat[t][i];
+				for (int i = 0; i < n; i++) {
+					w[i] += mat[t][i];
+				}
 			}
 			best = min(best, {w[t] - mat[t][t], co[t]});
 			co[s].insert(co[s].end(), co[t].begin(), co[t].end());
-			for (int i = 0; i < n; i++) mat[s][i] += mat[t][i];
-			for (int i = 0; i < n; i++) mat[i][s] = mat[s][i];
+			for (int i = 0; i < n; i++) {
+				mat[s][i] += mat[t][i];
+			}
+			for (int i = 0; i < n; i++) {
+				mat[i][s] = mat[s][i];
+			}
 			mat[0][t] = INT_MIN;
 		}
 

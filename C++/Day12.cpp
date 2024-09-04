@@ -3,10 +3,8 @@
 namespace Day12
 {
 
-	std::map<int64_t, int64_t> g_cache;
-
 	int64_t numberOfSolns(const std::string & pattern, const std::vector<int> & is,
-		const int pattern_idx, const int is_idx)
+		 std::map<int64_t, int64_t> & cache, const int pattern_idx=0, const int is_idx=0)
 	{
 		if (is_idx >= (int)is.size()) {
 			// make sure we don't have any '#' left over
@@ -24,9 +22,9 @@ namespace Day12
 
 		int64_t waysToPack = 0;
 		int64_t globaLookUp = pattern_idx * 100 + is_idx;
-		if (g_cache.count(globaLookUp)) { // we've seen this situation before...
+		if (cache.count(globaLookUp)) { // we've seen this situation before...
 			//..so just return it
-			return g_cache[globaLookUp];
+			return cache[globaLookUp];
 		}
 		// try to fit the first blocks
 		int toFit = is[is_idx];
@@ -56,11 +54,11 @@ namespace Day12
 
 			// at this point we can def write out so shift indices and recur
 			auto next_pattern_idx = pattern.find_first_of("?#", i + toFit + 1);
-			waysToPack += numberOfSolns(pattern, is, next_pattern_idx, is_idx + 1);
+			waysToPack += numberOfSolns(pattern, is, cache, next_pattern_idx, is_idx + 1);
 		}
 
 		// cache this result so other branches can use it
-		g_cache[globaLookUp] = waysToPack;
+		cache[globaLookUp] = waysToPack;
 		return waysToPack;
 	}
 
@@ -74,7 +72,7 @@ namespace Day12
 		}
 
 		// reset cache before we start
-		g_cache.clear();
+		std::map<int64_t, int64_t> cache;
 
 		if (expand) {
 			std::string str5 = ps[0];
@@ -89,10 +87,10 @@ namespace Day12
 				std::copy(partitions.begin(), partitions.end(), std::back_inserter(parts5));
 			}
 
-			return numberOfSolns(str5, parts5, 0, 0);
+			return numberOfSolns(str5, parts5, cache, 0, 0);
 		}
 
-		return numberOfSolns(ps[0], partitions, 0, 0);
+		return numberOfSolns(ps[0], partitions, cache, 0, 0);
 	}
 
 	int Run(const std::string& filename)
@@ -101,11 +99,9 @@ namespace Day12
 
 		int part1 = 0;
 		int64_t part2 = 0;
-		int line = 1;
 		for (auto l : ls) {
 			part1 += parseInput(l, false);
 			part2 += parseInput(l, true);
-			line++;
 		}
 
 		AH::PrintSoln(12, part1, part2);

@@ -161,7 +161,7 @@ namespace Day17
 
 		dist[start.r][start.c][start.d % 2] = grid[start.r][start.c % 2];
 		V.insert(hashPos(start));
-		int minSeen = dist[start.r][start.c][start.d];
+		int minSeen = dist[start.r][start.c][start.d % 2];
 
 		while (V.size() > 0) {
 			const auto u = findSmallest(V, dist, minSeen);

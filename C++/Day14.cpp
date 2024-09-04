@@ -2,7 +2,7 @@
 
 namespace Day14
 {
-	
+
 	void shiftNorth(std::vector<std::string> & grid)
 	{
 		bool moved = true;
@@ -76,14 +76,14 @@ namespace Day14
 
 	int Run(const std::string& filename)
 	{
-		auto ls = AH::ReadTextFile(filename);	
+		auto ls = AH::ReadTextFile(filename);
 
 		shiftNorth(ls);
 		int part1 = calculateLoad(ls);
 
 		// re-read the grid
 		ls = AH::ReadTextFile(filename);
-		const int burnIn = 1000; // needs to be large enough to fall into a cycle
+		const int burnIn = 750; // needs to be large enough to fall into a cycle
 		int i = 0;
 		for (; i < burnIn; ++i) {
 			spinCycle(ls);
