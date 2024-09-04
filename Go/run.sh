@@ -1,5 +1,3 @@
-export GO111MODULE=off
-
 if [ $# -gt 0 ]
 then
   day=$(printf "%02d" $1)
@@ -7,11 +5,13 @@ else
   day=-1
 fi
 
+LDFLAGS=()
+
 if [ $day -gt 0 ]
 then
-	if test -f Day$day.go;
+	if test -f Day$day/Day$day.go;
 	then
-		go run Day$day.go
+		LDFLAGS+=("-X 'main.b$day=1'")
 	else
 		echo "Day " $day " does not exist"
 	fi
@@ -19,9 +19,9 @@ else
 	missing=""
 	for i in $(seq -f "%02g" 1 25)
 	do
-		if test -f Day$i.go;
+		if test -f Day$i/Day$i.go;
 		then
-			go run Day$i.go
+			LDFLAGS+=("-X 'main.b$i=1'")
 		else
 			if [ "$missing" = "" ]
 			then
@@ -37,4 +37,4 @@ else
 	fi
 fi
 
-export GO111MODULE=on
+go run -ldflags="${LDFLAGS[*]}" .
