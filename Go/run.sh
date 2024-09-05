@@ -13,7 +13,7 @@ then
 	then
     BUILDTAGS+=("d$day")
 	else
-		echo "Day " $day " does not exist"
+		echo "Day" $day "does not exist"
 	fi
 else
 	missing=""
