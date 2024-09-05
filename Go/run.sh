@@ -5,13 +5,13 @@ else
   day=-1
 fi
 
-LDFLAGS=()
+BUILDTAGS=()
 
 if [ $day -gt 0 ]
 then
 	if test -f Day$day/Day$day.go;
 	then
-		LDFLAGS+=("-X 'main.b$day=1'")
+    BUILDTAGS+=("d$day")
 	else
 		echo "Day " $day " does not exist"
 	fi
@@ -21,7 +21,7 @@ else
 	do
 		if test -f Day$i/Day$i.go;
 		then
-			LDFLAGS+=("-X 'main.b$i=1'")
+      BUILDTAGS+=("d$i")
 		else
 			if [ "$missing" = "" ]
 			then
@@ -37,4 +37,6 @@ else
 	fi
 fi
 
-go run -ldflags="${LDFLAGS[*]}" .
+go build -tags="${BUILDTAGS[*]}" -o aoc2023 . 
+./aoc2023
+rm -rf aoc2023

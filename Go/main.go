@@ -28,106 +28,30 @@ import (
 	D25 "AoC/Day25"
 )
 
-var b01 = "0"
-var b02 = "0"
-var b03 = "0"
-var b04 = "0"
-var b05 = "0"
-var b06 = "0"
-var b07 = "0"
-var b08 = "0"
-var b09 = "0"
-var b10 = "0"
-var b11 = "0"
-var b12 = "0"
-var b13 = "0"
-var b14 = "0"
-var b15 = "0"
-var b16 = "0"
-var b17 = "0"
-var b18 = "0"
-var b19 = "0"
-var b20 = "0"
-var b21 = "0"
-var b22 = "0"
-var b23 = "0"
-var b24 = "0"
-var b25 = "0"
-
 func main() {
-	if b01 == "1" {
-		D01.Run()
-	}
-	if b02 == "1" {
-		D02.Run()
-	}
-	if b03 == "1" {
-		D03.Run()
-	}
-	if b04 == "1" {
-		D04.Run()
-	}
-	if b05 == "1" {
-		D05.Run()
-	}
-	if b06 == "1" {
-		D06.Run()
-	}
-	if b07 == "1" {
-		D07.Run()
-	}
-	if b08 == "1" {
-		D08.Run()
-	}
-	if b09 == "1" {
-		D09.Run()
-	}
-	if b10 == "1" {
-		D10.Run()
-	}
-	if b11 == "1" {
-		D11.Run()
-	}
-	if b12 == "1" {
-		D12.Run()
-	}
-	if b13 == "1" {
-		D13.Run()
-	}
-	if b14 == "1" {
-		D14.Run()
-	}
-	if b15 == "1" {
-		D15.Run()
-	}
-	if b16 == "1" {
-		D16.Run()
-	}
-	if b17 == "1" {
-		D17.Run()
-	}
-	if b18 == "1" {
-		D18.Run()
-	}
-	if b19 == "1" {
-		D19.Run()
-	}
-	if b20 == "1" {
-		D20.Run()
-	}
-	if b21 == "1" {
-		D21.Run()
-	}
-	if b22 == "1" {
-		D22.Run()
-	}
-	if b23 == "1" {
-		D23.Run()
-	}
-	if b24 == "1" {
-		D24.Run()
-	}
-	if b25 == "1" {
-		D25.Run()
-	}
+	D01.Run()
+	D02.Run()
+	D03.Run()
+	D04.Run()
+	D05.Run()
+	D06.Run()
+	D07.Run()
+	D08.Run()
+	D09.Run()
+	D10.Run()
+	D11.Run()
+	D12.Run()
+	D13.Run()
+	D14.Run()
+	D15.Run()
+	D16.Run()
+	D17.Run()
+	D18.Run()
+	D19.Run()
+	D20.Run()
+	D21.Run()
+	D22.Run()
+	D23.Run()
+	D24.Run()
+	D25.Run()
 }
