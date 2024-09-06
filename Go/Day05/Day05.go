@@ -50,7 +50,7 @@ func parseMapping(s string) []Mapping {
 
 	ss := strings.Split(s, "|")
 	for _, s := range ss {
-		if AH.ContainsChar(s, ':') {
+		if strings.ContainsRune(s, ':') {
 			continue
 		}
 		p := strings.Split(s, " ")

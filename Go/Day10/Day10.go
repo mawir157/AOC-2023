@@ -5,6 +5,7 @@ package Day10
 
 import (
 	AH "AoC/adventhelper"
+	"strings"
 )
 
 type Pos struct {
@@ -33,16 +34,16 @@ func moves(p Pos, ps []string) (Pos, Pos) {
 	// c == 'S'
 	sNbrs := []Pos{}
 	above, left, down, right := "F7|", "FL-", "JL|", "J7-"
-	if AH.ContainsChar(above, AH.RuneAt(ps[p.r-1], p.c)) {
+	if strings.ContainsRune(above, AH.RuneAt(ps[p.r-1], p.c)) {
 		sNbrs = append(sNbrs, Pos{p.r - 1, p.c})
 	}
-	if AH.ContainsChar(left, AH.RuneAt(ps[p.r], p.c-1)) {
+	if strings.ContainsRune(left, AH.RuneAt(ps[p.r], p.c-1)) {
 		sNbrs = append(sNbrs, Pos{p.r, p.c - 1})
 	}
-	if AH.ContainsChar(down, AH.RuneAt(ps[p.r+1], p.c)) {
+	if strings.ContainsRune(down, AH.RuneAt(ps[p.r+1], p.c)) {
 		sNbrs = append(sNbrs, Pos{p.r + 1, p.c})
 	}
-	if AH.ContainsChar(right, AH.RuneAt(ps[p.r], p.c+1)) {
+	if strings.ContainsRune(right, AH.RuneAt(ps[p.r], p.c+1)) {
 		sNbrs = append(sNbrs, Pos{p.r, p.c + 1})
 	}
 

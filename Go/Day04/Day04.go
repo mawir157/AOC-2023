@@ -4,6 +4,7 @@
 package Day04
 
 import (
+	"slices"
 	"strconv"
 	"strings"
 
@@ -40,7 +41,7 @@ func parseLine(game string) ([]int, []int) {
 func scoreCard(winning []int, card []int) (score int) {
 	score = 0
 	for _, number := range card {
-		if AH.ContainsInt(winning, number) {
+		if slices.Contains(winning, number) {
 			score++
 		}
 	}

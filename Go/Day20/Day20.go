@@ -4,6 +4,7 @@
 package Day20
 
 import (
+	"slices"
 	"strings"
 
 	AH "AoC/adventhelper"
@@ -99,7 +100,7 @@ func parseInput(ss []string) Graph {
 		to := strings.Split(ps[1], ", ")
 		for j := range gns {
 			gnName := gns[j].name
-			if AH.ContainsStr(to, gnName) {
+			if slices.Contains(to, gnName) {
 				adj[i][j] = 1
 				gns[j].inputs[name] = false
 			}

@@ -4,6 +4,9 @@
 package Day11
 
 import (
+	"slices"
+	"strings"
+
 	AH "AoC/adventhelper"
 )
 
@@ -33,12 +36,12 @@ func parseInput(ss []string, ex int) (ret int) {
 	ps := []Pos{}
 	for ir := 0; ir < len(ss); ir++ {
 		s := ss[ir]
-		if !AH.ContainsChar(s, '#') {
+		if !strings.ContainsRune(s, '#') {
 			row_offset += ex
 		}
 		col_offset := 0
 		for ic := 0; ic < len(s); ic++ {
-			if AH.ContainsInt(empty_cols, ic) {
+			if slices.Contains(empty_cols, ic) {
 				col_offset += ex
 			}
 			if AH.RuneAt(ss[ir], ic) == '#' {
