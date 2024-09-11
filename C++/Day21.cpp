@@ -1,3 +1,5 @@
+#ifdef DAY21
+
 #include "AH.h"
 
 namespace Day21
@@ -84,9 +86,8 @@ namespace Day21
 	// later.
 	std::vector<int> getMagicNumbers(const Grid & grid, std::set<Pos> & cur)
 	{
-		// std::map<Pos, int> cur = { {start, 1} };
 		// do enough iterations to get to a stable state 
-		// we've lready done 64 so another 66 is enough (130=64+66 and even)
+		// we've already done 64 so another 66 is enough (130=64+66 and even)
 		for (int i = 0; i < 66; ++i) {
 			cur = spread(cur, grid);
 		}
@@ -157,3 +158,5 @@ namespace Day21
 	}
 
 }
+
+#endif

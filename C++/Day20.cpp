@@ -1,3 +1,5 @@
+#ifdef DAY20
+
 #include "AH.h"
 
 namespace Day20
@@ -226,3 +228,5 @@ namespace Day20
 	}
 
 }
+
+#endif

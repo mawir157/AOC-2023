@@ -126,14 +126,16 @@ namespace AH
 		}
 	}
 
-	uint64_t stoui64(const std::string s) {
+	uint64_t stoui64(const std::string s)
+	{
 		uint64_t value;
 		std::istringstream iss(s);
 		iss >> value;
 		return value;
 	}
 
-	int64_t stoi64(const std::string s) {
+	int64_t stoi64(const std::string s)
+	{
 		int64_t value;
 		std::istringstream iss(s);
 		iss >> value;

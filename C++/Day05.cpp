@@ -1,3 +1,5 @@
+#ifdef DAY05
+
 #include "AH.h"
 
 namespace Day05
@@ -154,3 +156,5 @@ namespace Day05
 	}
 
 }
+
+#endif

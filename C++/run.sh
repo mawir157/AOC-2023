@@ -14,8 +14,8 @@ if [ $day -gt 0 ]
 then
 	if test -f Day$day.cpp;
 	then
-		echo "compiling..."
-		g++ *.cpp -O2 -o aoc2023 -std=c++17 -DDAY$day -Wall
+		echo "compiling single day..."
+		g++ *.cpp -O2 -o aoc2023 -std=c++17 -DDAY$day -Wall -Wextra -Wunused-variable
 		echo "done."
 		./aoc2023
 		rm -rf aoc2023
@@ -39,7 +39,7 @@ else
 			fi
 		fi
 	done
-	echo "compiling..."
+	echo "compiling all days..."
 	g++ *.cpp -O2 -o aoc2023 -std=c++17 $COMPILERSTRING
 	echo "done."
 	./aoc2023
