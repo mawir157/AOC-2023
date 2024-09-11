@@ -97,39 +97,6 @@ func PowInt(a int, b int) (n int) {
 	return
 }
 
-// does the array s contain e?
-func ContainsInt(s []int, e int) bool {
-	for _, a := range s {
-		if a == e {
-			return true
-		}
-	}
-
-	return false
-}
-
-// does the array s contain e?
-func ContainsStr(s []string, e string) bool {
-	for _, a := range s {
-		if a == e {
-			return true
-		}
-	}
-
-	return false
-}
-
-// does the string s contain e?
-func ContainsChar(s string, r rune) bool {
-	for _, a := range s {
-		if a == r {
-			return true
-		}
-	}
-
-	return false
-}
-
 // returns the maximum and minimum of an array of ints
 func MaxAndMin(arr []int) (max int, min int) {
 	max, min = arr[0], arr[0]

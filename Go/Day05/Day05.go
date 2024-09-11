@@ -1,3 +1,6 @@
+//go:build d05
+// +build d05
+
 package Day05
 
 import (
@@ -47,7 +50,7 @@ func parseMapping(s string) []Mapping {
 
 	ss := strings.Split(s, "|")
 	for _, s := range ss {
-		if AH.ContainsChar(s, ':') {
+		if strings.ContainsRune(s, ':') {
 			continue
 		}
 		p := strings.Split(s, " ")

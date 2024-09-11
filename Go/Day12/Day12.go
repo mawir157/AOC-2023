@@ -1,3 +1,6 @@
+//go:build d12
+// +build d12
+
 package Day12
 
 import (
@@ -9,7 +12,7 @@ import (
 
 func numberOfSolns(pattern string, is []int, cache map[int]int) int {
 	if 0 == len(is) {
-		if AH.ContainsChar(pattern, '#') {
+		if strings.ContainsRune(pattern, '#') {
 			return 0
 		}
 		return 1
